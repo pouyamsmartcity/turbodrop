@@ -1,8 +1,8 @@
 [workspace]
 resolver = "2"
-members = ["crates/core", "crates/cli"]
+members = ["crates/core", "crates/cli", "apps/desktop/src-tauri"]
 # `cargo test` / `cargo build` at the root skip the desktop app (it needs WebView/GTK system libraries).
-default-members = ["crates/core", "crates/cli"]
+default-members = ["crates/core", "crates/cli", "apps/desktop/src-tauri"]
 
 [workspace.package]
 version = "0.1.0"
