@@ -157,7 +157,7 @@ Tests: `cargo test` (engine, 25 tests incl. end-to-end transfers, resume after r
 - Signed Windows installer, `winget` and Microsoft Store
 - LocalSend protocol bridge, Bluetooth/Wi‑Fi Direct pairing
 
-Ideas and bug reports are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Why each feature exists (with links to the requests it answers): [docs/FEATURES.md](docs/FEATURES.md). Ideas and bug reports are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

@@ -8,7 +8,11 @@
   import OutgoingCard from './components/OutgoingCard.svelte';
   import TextSheet from './components/TextSheet.svelte';
   import { t } from './lib/i18n';
+  import { detectDevice } from './lib/device';
   import { app } from './lib/state.svelte';
+
+  // Mobile browsers can't pick folders; offer it where it works.
+  const canPickFolder = !['ios', 'android'].includes(detectDevice().platform);
 
   let fileInput = $state<HTMLInputElement>();
   let folderInput = $state<HTMLInputElement>();
@@ -129,7 +133,9 @@
         {t('send.hint')}{#if app.host}<br /><span class="to">{t('send.toComputer', { name: app.host.name })}</span>{/if}
       </p>
       <div class="row">
-        <button class="btn" disabled={!ready} onclick={() => folderInput?.click()}><Icon name="folder" size={18} />{t('send.folder')}</button>
+        {#if canPickFolder}
+          <button class="btn" disabled={!ready} onclick={() => folderInput?.click()}><Icon name="folder" size={18} />{t('send.folder')}</button>
+        {/if}
         <button class="btn" disabled={!ready} onclick={() => (textOpen = true)}><Icon name="message" size={18} />{t('send.text')}</button>
       </div>
       <input bind:this={fileInput} type="file" multiple hidden onchange={picked} />

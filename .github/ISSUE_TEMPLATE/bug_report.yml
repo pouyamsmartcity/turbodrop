@@ -1,0 +1,23 @@
+name: Bug report
+description: Something doesn't work
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: devices
+    attributes:
+      label: Devices
+      placeholder: "Windows 11 app 0.1.0 → iPhone 15, iOS 18, Safari"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Run the CLI with TURBODROP_LOG=debug for details. Remove anything private.
