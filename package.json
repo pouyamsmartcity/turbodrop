@@ -1,0 +1,19 @@
+{
+  "name": "turbodrop-monorepo",
+  "private": true,
+  "description": "Turbodrop — open-source AirDrop alternative for Windows, iPhone, Android, Mac and Linux. By Pouyam.",
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "build:web": "npm run build -w web",
+    "test:web": "npm test -w web",
+    "check": "npm run check -w web && npm run check -w apps/desktop",
+    "e2e": "npm test -w e2e",
+    "desktop:dev": "npm run tauri -w apps/desktop -- dev",
+    "desktop:build": "npm run tauri -w apps/desktop -- build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

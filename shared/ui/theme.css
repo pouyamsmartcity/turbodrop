@@ -1,0 +1,271 @@
+/* Turbodrop design tokens — shared by the desktop app and the web client. */
+:root {
+  --font: 'Inter Variable', 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-rtl: 'Vazirmatn Variable', 'Inter Variable', 'Segoe UI', Tahoma, sans-serif;
+
+  --accent-1: #22d3ee;
+  --accent-2: #6366f1;
+  --accent-3: #d946ef;
+  --accent: var(--accent-2);
+  --grad: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 52%, var(--accent-3) 100%);
+  --grad-soft: linear-gradient(135deg, color-mix(in oklab, var(--accent-1) 22%, transparent), color-mix(in oklab, var(--accent-3) 22%, transparent));
+
+  --bg: #070912;
+  --bg-2: #0c1020;
+  --surface: rgba(255, 255, 255, 0.055);
+  --surface-2: rgba(255, 255, 255, 0.085);
+  --surface-solid: #121729;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #eef2ff;
+  --text-2: #a3adc8;
+  --text-3: #6d7896;
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --danger: #fb7185;
+  --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --ring: 0 0 0 3px color-mix(in oklab, var(--accent-2) 45%, transparent);
+
+  --r-sm: 10px;
+  --r: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f3f5fb;
+  --bg-2: #e9edf8;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-2: rgba(255, 255, 255, 0.92);
+  --surface-solid: #ffffff;
+  --border: rgba(20, 30, 70, 0.09);
+  --border-strong: rgba(20, 30, 70, 0.16);
+  --text: #0e1330;
+  --text-2: #4c5677;
+  --text-3: #8790ad;
+  --shadow: 0 12px 40px -14px rgba(30, 40, 90, 0.28), 0 2px 6px rgba(30, 40, 90, 0.08);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #f3f5fb;
+    --bg-2: #e9edf8;
+    --surface: rgba(255, 255, 255, 0.72);
+    --surface-2: rgba(255, 255, 255, 0.92);
+    --surface-solid: #ffffff;
+    --border: rgba(20, 30, 70, 0.09);
+    --border-strong: rgba(20, 30, 70, 0.16);
+    --text: #0e1330;
+    --text-2: #4c5677;
+    --text-3: #8790ad;
+    --shadow: 0 12px 40px -14px rgba(30, 40, 90, 0.28), 0 2px 6px rgba(30, 40, 90, 0.08);
+    color-scheme: light;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root[dir='rtl'] body {
+  font-family: var(--font-rtl);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+
+/* The moving aurora behind everything. */
+.aurora {
+  position: fixed;
+  inset: -20vmax;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40vmax 34vmax at 18% 22%, color-mix(in oklab, var(--accent-1) 28%, transparent), transparent 70%),
+    radial-gradient(42vmax 36vmax at 82% 18%, color-mix(in oklab, var(--accent-3) 22%, transparent), transparent 70%),
+    radial-gradient(46vmax 40vmax at 55% 92%, color-mix(in oklab, var(--accent-2) 26%, transparent), transparent 70%);
+  filter: blur(10px) saturate(1.1);
+  animation: aurora 26s var(--ease) infinite alternate;
+  opacity: 0.85;
+}
+
+:root[data-theme='light'] .aurora {
+  opacity: 0.5;
+}
+
+@keyframes aurora {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(3vmax, -2vmax, 0) rotate(8deg) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-3vmax, 2vmax, 0) rotate(-6deg) scale(1.02);
+  }
+}
+
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  font-weight: 600;
+  font-size: 15px;
+  transition:
+    transform 0.18s var(--ease),
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:hover {
+  border-color: color-mix(in oklab, var(--accent-2) 55%, var(--border-strong));
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  border: 0;
+  color: #fff;
+  background: var(--grad);
+  box-shadow: 0 8px 30px -8px color-mix(in oklab, var(--accent-2) 75%, transparent);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--surface);
+}
+
+.btn-sm {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.btn-danger {
+  color: var(--danger);
+}
+
+.grad-text {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.progress {
+  position: relative;
+  height: 6px;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--text) 10%, transparent);
+  overflow: hidden;
+}
+
+.progress > i {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: inherit;
+  background: var(--grad);
+  transition: width 0.3s var(--ease);
+}
+
+.progress > i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shimmer 1.4s linear infinite;
+}
+
+.progress.done > i::after,
+.progress.idle > i::after {
+  display: none;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.muted {
+  color: var(--text-2);
+}
+
+.tiny {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
