@@ -1,0 +1,12 @@
+{
+  "name": "@turbodrop/e2e",
+  "private": true,
+  "type": "module",
+  "description": "Browser end-to-end tests: real Turbodrop binary + Chromium and WebKit (Safari engine).",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0"
+  }
+}
