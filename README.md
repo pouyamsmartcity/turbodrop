@@ -63,7 +63,7 @@ Turbodrop's answer: **one beautiful app on the computer, nothing at all on the p
 - 🧭 **History** with Open and Show in folder.
 - 🌍 **12 languages** with full right-to-left support: English, فارسی, العربية, Türkçe, Español, Français, Deutsch, Português, Русский, हिन्दी, 中文, 日本語.
 - ⌨️ **A real CLI** for Windows, macOS and Linux with a QR code right in the terminal and JSON output for scripts.
-- 🪶 **Small and fast.** A single Rust engine; the CLI is ~6 MB with the phone web app inside. 1 GiB computer-to-computer over loopback in 7.5 s (≈136 MiB/s, encryption included) — faster than gigabit Ethernet, so your network is the limit.
+- 🪶 **Small and fast.** The Windows installer is **~4 MB** (Electron apps are 80–150 MB); the CLI is ~6 MB with the phone web app inside. 1 GiB computer-to-computer over loopback in 7.5 s (≈136 MiB/s, encryption included) — faster than gigabit Ethernet, so your network is the limit.
 - 🕊️ **Private by design.** No accounts, no telemetry, no servers. Your files never leave your network.
 
 ## How it compares
