@@ -1,0 +1,39 @@
+[package]
+name = "turbodrop-core"
+description = "Turbodrop engine: LAN discovery, end-to-end encrypted resumable file transfer, and the zero-install browser client server."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords = ["airdrop", "file-transfer", "lan", "localsend", "encryption"]
+categories = ["network-programming", "filesystem"]
+
+[dependencies]
+tokio.workspace = true
+axum.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+rust-embed.workspace = true
+chacha20poly1305.workspace = true
+hkdf.workspace = true
+sha2.workspace = true
+x25519-dalek.workspace = true
+rand.workspace = true
+base64.workspace = true
+blake3.workspace = true
+socket2.workspace = true
+if-addrs.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+mime_guess.workspace = true
+futures-util.workspace = true
+reqwest.workspace = true
+gethostname.workspace = true
+dirs.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
