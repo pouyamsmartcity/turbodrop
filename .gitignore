@@ -1,0 +1,14 @@
+/target/
+node_modules/
+web/dist/
+apps/desktop/dist/
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
+site/dist/
+e2e/test-results/
+e2e/playwright-report/
+*.tdpart
+.DS_Store
+Thumbs.db
+*.log
+.env*

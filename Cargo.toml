@@ -1,0 +1,49 @@
+[workspace]
+resolver = "2"
+members = ["crates/core", "crates/cli"]
+# `cargo test` / `cargo build` at the root skip the desktop app (it needs WebView/GTK system libraries).
+default-members = ["crates/core", "crates/cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+license = "MIT"
+repository = "https://github.com/pouyamsmartcity/turbodrop"
+homepage = "https://pouyamsmartcity.github.io/turbodrop/"
+authors = ["Pouyam <https://www.pouyam.com>"]
+
+[workspace.dependencies]
+turbodrop-core = { path = "crates/core" }
+tokio = { version = "1", features = ["full"] }
+axum = { version = "0.8", features = ["ws"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rust-embed = "8"
+chacha20poly1305 = "0.10"
+hkdf = "0.12"
+sha2 = "0.10"
+x25519-dalek = { version = "2", features = ["static_secrets"] }
+rand = "0.8"
+base64 = "0.22"
+blake3 = "1"
+socket2 = { version = "0.5", features = ["all"] }
+if-addrs = "0.13"
+thiserror = "2"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+mime_guess = "2"
+futures-util = "0.3"
+reqwest = { version = "0.12", default-features = false, features = ["json"] }
+gethostname = "0.5"
+dirs = "6"
+qrcode = { version = "0.14", default-features = false }
+clap = { version = "4", features = ["derive"] }
+tempfile = "3"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+opt-level = 3
