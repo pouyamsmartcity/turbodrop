@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getCurrentWebview } from '@tauri-apps/api/webview';
+  import { readText } from '@tauri-apps/plugin-clipboard-manager';
   import { getCurrentWindow } from '@tauri-apps/api/window';
   import { onMount } from 'svelte';
   import Icon, { type IconName } from '../../../shared/ui/Icon.svelte';
@@ -58,7 +59,24 @@
   });
 
   const activeCount = $derived(store.active.length);
+
+  // Ctrl+V anywhere outside a text field: send the clipboard text.
+  async function onKey(e: KeyboardEvent) {
+    if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'v') return;
+    if ((e.target as HTMLElement)?.closest('input,textarea,select')) return;
+    try {
+      const text = await readText();
+      if (text?.trim()) {
+        store.selectionText = text;
+        store.view = 'home';
+      }
+    } catch {
+      /* clipboard empty or not text */
+    }
+  }
 </script>
+
+<svelte:window onkeydown={onKey} />
 
 <div class="aurora"></div>
 
