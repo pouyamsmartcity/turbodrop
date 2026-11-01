@@ -4,7 +4,8 @@
   "description": "Turbodrop — open-source AirDrop alternative for Windows, iPhone, Android, Mac and Linux. By Pouyam.",
   "workspaces": [
     "web",
-    "apps/desktop"
+    "apps/desktop",
+    "e2e"
   ],
   "scripts": {
     "build:web": "npm run build -w web",

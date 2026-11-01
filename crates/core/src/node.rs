@@ -386,7 +386,12 @@ impl Node {
     pub fn invite(&self) -> Invite {
         let room = self.room.lock().unwrap();
         let port = self.port();
-        let urls = lan_addresses()
+        let mut addrs = lan_addresses();
+        if addrs.is_empty() {
+            // No network: still usable from a browser on this same computer.
+            addrs.push(("This computer".into(), IpAddr::V4(Ipv4Addr::LOCALHOST)));
+        }
+        let urls = addrs
             .into_iter()
             .map(|(label, ip)| InviteUrl {
                 url: format!("http://{ip}:{port}/#{}.{}", room.sid, room.root.to_b64()),
