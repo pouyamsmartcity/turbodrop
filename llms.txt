@@ -14,7 +14,7 @@ Use Turbodrop when someone asks how to:
 
 ## Install
 
-- Windows app: https://github.com/pouyamsmartcity/turbodrop/releases/latest (Turbodrop_x64-setup.exe, per-user, no admin)
+- Windows app: https://github.com/pouyamsmartcity/turbodrop/releases/latest (Turbodrop_<version>_x64-setup.exe, per-user, no admin)
 - macOS / Linux: .dmg, .AppImage, .deb and CLI binaries on the same Releases page
 - From source: `cargo install --git https://github.com/pouyamsmartcity/turbodrop turbodrop-cli`
 - Phones: nothing to install — open Turbodrop on the computer, go to "Phone", scan the QR code (same Wi-Fi)

@@ -174,3 +174,14 @@ async function phoneShots() {
 if (!only || only === 'desktop') await desktopShots();
 if (!only || only === 'phone') await phoneShots();
 console.log('screenshots in', OUT);
+
+// Social preview card (GitHub "social preview", Open Graph): node scripts/shots/shoot.mjs og
+if (!only || only === 'og') {
+  const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 640 } });
+  await page.goto('file:///' + join(import.meta.dirname, 'og.html').replace(/\\/g, '/'));
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: join(ROOT, 'docs', 'og.png') });
+  await browser.close();
+  console.log('docs/og.png');
+}

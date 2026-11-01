@@ -37,7 +37,7 @@
       <span>{tr.direction === 'in' ? t('tr.in', { name: tr.peerName }) : t('tr.out', { name: tr.peerName })}</span>
       <span>·</span>
       {#if tr.status === 'active'}
-        <span class="ltr">{bytes(tr.doneBytes)} / {bytes(tr.totalBytes)}</span><span>·</span><span>{speed(tr.speed)}</span>
+        <bdi>{bytes(tr.doneBytes)} / {bytes(tr.totalBytes)}</bdi><span>·</span><bdi>{speed(tr.speed)}</bdi>
         {#if tr.speed > 0}<span>· {t('tr.left', { time: eta((tr.totalBytes - tr.doneBytes) / tr.speed) })}</span>{/if}
       {:else}
         <span class="st {tr.status}">{allSkipped ? t('tr.skipped') : t(statusKey)}</span>

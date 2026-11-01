@@ -88,7 +88,7 @@ LocalSend is a fantastic project with apps in every store; if both sides already
 
 ### Windows (the flagship app)
 
-Download **`Turbodrop_x64-setup.exe`** from [Releases](https://github.com/pouyamsmartcity/turbodrop/releases/latest) and run it. It installs for your user only (no admin). On first launch Windows Firewall asks whether Turbodrop may use the network — allow **Private networks**.
+Download **`Turbodrop_<version>_x64-setup.exe`** from [Releases](https://github.com/pouyamsmartcity/turbodrop/releases/latest) and run it. It installs for your user only (no admin). On first launch Windows Firewall asks whether Turbodrop may use the network — allow **Private networks**.
 
 > The installer is not code-signed yet, so SmartScreen may say “Windows protected your PC”. Click **More info → Run anyway**. Every release is built by [GitHub Actions](.github/workflows/release.yml) from this repository.
 
