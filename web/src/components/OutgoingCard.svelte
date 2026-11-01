@@ -11,7 +11,7 @@
   const live = $derived(tr.status === 'active' || tr.status === 'retrying' || tr.status === 'waiting');
   const resumed = $derived(tr.files.some((f) => f.resumed));
   const allSkipped = $derived(tr.files.length > 0 && tr.files.every((f) => f.status === 'skipped'));
-  const title = $derived(tr.text && !tr.files.length ? tr.text : tr.files.length === 1 ? tr.files[0].meta.name : `${tr.files.length} × ${tr.files[0]?.meta.path.split('/')[0] ?? ''}`);
+  const title = $derived(tr.text && !tr.files.length ? tr.text : tr.files.length === 1 ? tr.files[0].meta.name : `${tr.files[0].meta.path.split('/')[0]} +${tr.files.length - 1}`);
 </script>
 
 <article class="card glass" class:failed={tr.status === 'failed' || tr.status === 'declined'}>
@@ -38,9 +38,9 @@
       {:else if tr.status === 'canceled'}
         {t('tr.canceled')}
       {:else if tr.status === 'done'}
-        {allSkipped ? t('out.skipped') : t('out.done')}{#if total} · {bytes(total)}{/if}
+        {allSkipped ? t('out.skipped') : t('out.done')}{#if total} · <bdi>{bytes(total)}</bdi>{/if}
       {:else}
-        {bytes(done)} / {bytes(total)} · {speed(tr.speed)}{#if tr.speed > 0} · {t('tr.left', { time: eta((total - done) / tr.speed) })}{/if}
+        <bdi>{bytes(done)} / {bytes(total)}</bdi> · <bdi>{speed(tr.speed)}</bdi>{#if tr.speed > 0} · <bdi>{t('tr.left', { time: eta((total - done) / tr.speed) })}</bdi>{/if}
       {/if}
       {#if resumed && tr.status !== 'done'}
         <span class="chip">{t('out.resumed')}</span>

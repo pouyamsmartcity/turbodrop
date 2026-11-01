@@ -66,7 +66,7 @@
 
 ### ۱) نصب روی ویندوز
 
-1. فایل **`Turbodrop_x64-setup.exe`** را از [صفحهٔ Releases](https://github.com/pouyamsmartcity/turbodrop/releases/latest) دانلود و اجرا کنید. نصب فقط برای کاربر فعلی انجام می‌شود و دسترسی ادمین نمی‌خواهد.
+1. فایل **`Turbodrop_<نسخه>_x64-setup.exe`** را از [صفحهٔ Releases](https://github.com/pouyamsmartcity/turbodrop/releases/latest) دانلود و اجرا کنید. نصب فقط برای کاربر فعلی انجام می‌شود و دسترسی ادمین نمی‌خواهد.
 2. بار اول، فایروال ویندوز می‌پرسد که توربودراپ اجازهٔ استفاده از شبکه را دارد یا نه. گزینهٔ **Private networks** را تیک بزنید و Allow را بزنید.
 3. چون نصب‌کننده هنوز امضای دیجیتال ندارد، ممکن است پیام «Windows protected your PC» نمایش داده شود. روی **More info** و بعد **Run anyway** بزنید. همهٔ نسخه‌ها را GitHub Actions مستقیم از همین مخزن می‌سازد.
 

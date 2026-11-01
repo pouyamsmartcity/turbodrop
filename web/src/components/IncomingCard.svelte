@@ -84,7 +84,7 @@
 
     {#if tr.status === 'active'}
       <div class="progress"><i style="width:{pct}%"></i></div>
-      <div class="tiny">{t('in.receiving')} {bytes(done)} / {bytes(total)} · {speed(tr.speed)}{#if tr.speed > 0} · {t('tr.left', { time: eta((total - done) / tr.speed) })}{/if}</div>
+      <div class="tiny">{t('in.receiving')} <bdi>{bytes(done)} / {bytes(total)}</bdi> · <bdi>{speed(tr.speed)}</bdi>{#if tr.speed > 0} · <bdi>{t('tr.left', { time: eta((total - done) / tr.speed) })}</bdi>{/if}</div>
     {:else if tr.status === 'offered'}
       <div class="tiny">{t('in.bigHint', { size: bytes(total) })}</div>
       <div class="actions">
