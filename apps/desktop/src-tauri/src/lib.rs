@@ -10,7 +10,7 @@ use tauri::menu::{Menu, MenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Manager, State, WindowEvent};
 use tauri_plugin_notification::NotificationExt;
-use turbodrop_core::{Config, Direction, Event, Node, PeerKind, Settings, Status};
+use turbodrop_core::{Config, Direction, Event, Node, Settings, Status};
 
 mod platform;
 
@@ -382,17 +382,11 @@ fn spawn_event_pump(app: AppHandle, node: Arc<Node>) {
                         );
                     }
                 }
-                Event::TextReceived { from, text, .. } => {
-                    if prefs.notifications && !window_visible(&app) {
-                        let preview: String = text.chars().take(120).collect();
-                        notify(&app, &format!("Message from {}", from.name), &preview);
-                    }
-                }
-                Event::BrowserUpdate { client }
-                    if client.online && prefs.notifications && !window_visible(&app) =>
+                Event::TextReceived { from, text, .. }
+                    if prefs.notifications && !window_visible(&app) =>
                 {
-                    let _ = PeerKind::Browser;
-                    notify(&app, "Turbodrop", &format!("{} connected", client.name));
+                    let preview: String = text.chars().take(120).collect();
+                    notify(&app, &format!("Message from {}", from.name), &preview);
                 }
                 _ => {}
             }
@@ -402,8 +396,15 @@ fn spawn_event_pump(app: AppHandle, node: Arc<Node>) {
 
 fn build_tray(app: &AppHandle) -> tauri::Result<()> {
     let open = MenuItem::with_id(app, "open", "Open Turbodrop", true, None::<&str>)?;
+    let phone = MenuItem::with_id(
+        app,
+        "phone",
+        "Connect a phone (QR code)",
+        true,
+        None::<&str>,
+    )?;
     let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-    let menu = Menu::with_items(app, &[&open, &quit])?;
+    let menu = Menu::with_items(app, &[&open, &phone, &quit])?;
     TrayIconBuilder::with_id("main")
         .icon(app.default_window_icon().cloned().expect("bundled icon"))
         .tooltip("Turbodrop")
@@ -411,6 +412,10 @@ fn build_tray(app: &AppHandle) -> tauri::Result<()> {
         .show_menu_on_left_click(false)
         .on_menu_event(|app, e| match e.id.as_ref() {
             "open" => show_window(app.clone()),
+            "phone" => {
+                show_window(app.clone());
+                let _ = app.emit("navigate", "phone");
+            }
             "quit" => {
                 app.state::<AppState>()
                     .quitting

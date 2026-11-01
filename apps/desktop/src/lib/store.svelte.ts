@@ -158,6 +158,7 @@ class Store {
     await this.refresh();
     await listen<CoreEvent>('td-event', (e) => this.onEvent(e.payload));
     await listen<string[]>('open-files', (e) => void this.addPaths(e.payload));
+    await listen<View>('navigate', (e) => (this.view = e.payload));
     const pending = await invoke<string[]>('take_pending_files');
     if (pending.length) await this.addPaths(pending);
     this.ready = true;
