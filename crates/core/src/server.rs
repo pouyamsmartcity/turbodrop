@@ -1,5 +1,8 @@
 //! HTTP API (browser room + native peers) and the embedded web client.
 
+// Handlers return ready-made responses as errors; boxing them buys nothing here.
+#![allow(clippy::result_large_err)]
+
 use std::collections::HashMap;
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -53,26 +56,42 @@ fn err(code: StatusCode, msg: &str) -> Response {
 }
 
 fn sealed(bytes: Vec<u8>) -> Response {
-    ([(header::CONTENT_TYPE, "application/octet-stream"), (header::CACHE_CONTROL, "no-store")], bytes).into_response()
+    (
+        [
+            (header::CONTENT_TYPE, "application/octet-stream"),
+            (header::CACHE_CONTROL, "no-store"),
+        ],
+        bytes,
+    )
+        .into_response()
 }
 
 async fn info(State(node): S) -> Response {
     let mut r = Json(node.info()).into_response();
-    r.headers_mut().insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, HeaderValue::from_static("*"));
+    r.headers_mut().insert(
+        header::ACCESS_CONTROL_ALLOW_ORIGIN,
+        HeaderValue::from_static("*"),
+    );
     r
 }
 
 // ----- browser room ----------------------------------------------------------------------------
 
 fn ct_eq(a: &str, b: &str) -> bool {
-    a.len() == b.len() && a.bytes().zip(b.bytes()).fold(0u8, |acc, (x, y)| acc | (x ^ y)) == 0
+    a.len() == b.len()
+        && a.bytes()
+            .zip(b.bytes())
+            .fold(0u8, |acc, (x, y)| acc | (x ^ y))
+            == 0
 }
 
 /// Check the room credentials; returns the data key.
 fn room_key(node: &Node, sid: Option<&str>, auth: Option<&str>) -> Option<Key> {
     let room = node.room.lock().unwrap();
     match (sid, auth) {
-        (Some(s), Some(a)) if ct_eq(s, &room.sid) && ct_eq(a, &room.token) => Some(room.data.clone()),
+        (Some(s), Some(a)) if ct_eq(s, &room.sid) && ct_eq(a, &room.token) => {
+            Some(room.data.clone())
+        }
         _ => None,
     }
 }
@@ -102,11 +121,19 @@ async fn b_hello(State(node): S, h: HeaderMap, body: Bytes) -> Response {
     let platform: String = hello.platform.chars().take(20).collect();
     let info = {
         let mut clients = node.clients.lock().unwrap();
-        let entry = clients.entry(hello.client_id.clone()).or_insert_with(|| ClientConn {
-            info: BrowserClient { id: hello.client_id.clone(), name: name.clone(), platform: platform.clone(), online: false, last_seen: 0 },
-            tx: None,
-            conn: 0,
-        });
+        let entry = clients
+            .entry(hello.client_id.clone())
+            .or_insert_with(|| ClientConn {
+                info: BrowserClient {
+                    id: hello.client_id.clone(),
+                    name: name.clone(),
+                    platform: platform.clone(),
+                    online: false,
+                    last_seen: 0,
+                },
+                tx: None,
+                conn: 0,
+            });
         entry.info.name = name;
         entry.info.platform = platform;
         entry.info.last_seen = now_ms();
@@ -114,7 +141,11 @@ async fn b_hello(State(node): S, h: HeaderMap, body: Bytes) -> Response {
     };
     node.save_clients();
     node.emit(Event::BrowserUpdate { client: info });
-    let welcome = Welcome { host: node.info(), chunk_size: CHUNK_SIZE, pending: node.offers_for_client(&hello.client_id) };
+    let welcome = Welcome {
+        host: node.info(),
+        chunk_size: CHUNK_SIZE,
+        pending: node.offers_for_client(&hello.client_id),
+    };
     sealed(crypto::seal_json(&key, "welcome", &welcome))
 }
 
@@ -140,7 +171,9 @@ async fn ws_session(node: Arc<Node>, client: String, socket: WebSocket) {
     let conn = node.next_conn_id();
     let info = {
         let mut clients = node.clients.lock().unwrap();
-        let Some(c) = clients.get_mut(&client) else { return };
+        let Some(c) = clients.get_mut(&client) else {
+            return;
+        };
         c.tx = Some(tx);
         c.conn = conn;
         c.info.online = true;
@@ -198,7 +231,16 @@ async fn b_offer(State(node): S, h: HeaderMap, body: Bytes) -> Response {
         .map(|c| c.info.platform.clone())
         .unwrap_or_else(|| offer.sender.platform.clone());
     let ask = node.settings().ask_browsers;
-    let reply = receive_offer(&node, key.clone(), offer, PeerKind::Browser, platform, None, ask).await;
+    let reply = receive_offer(
+        &node,
+        key.clone(),
+        offer,
+        PeerKind::Browser,
+        platform,
+        None,
+        ask,
+    )
+    .await;
     sealed(crypto::seal_json(&key, "offer-reply", &reply))
 }
 
@@ -213,16 +255,32 @@ async fn receive_offer(
     ask: bool,
 ) -> OfferReply {
     if offer.files.len() > 100_000 || offer.transfer_id.len() > 64 || offer.transfer_id.is_empty() {
-        return OfferReply { accepted: false, files: vec![], reason: Some("invalid offer".into()) };
+        return OfferReply {
+            accepted: false,
+            files: vec![],
+            reason: Some("invalid offer".into()),
+        };
     }
     if node.transfer(&offer.transfer_id).is_some() {
-        return OfferReply { accepted: false, files: vec![], reason: Some("duplicate transfer id".into()) };
+        return OfferReply {
+            accepted: false,
+            files: vec![],
+            reason: Some("duplicate transfer id".into()),
+        };
     }
     let mut seen = std::collections::HashSet::new();
     if !offer.files.iter().all(|f| seen.insert(f.id.clone())) {
-        return OfferReply { accepted: false, files: vec![], reason: Some("duplicate file id".into()) };
+        return OfferReply {
+            accepted: false,
+            files: vec![],
+            reason: Some("duplicate file id".into()),
+        };
     }
-    let slots = offer.files.iter().map(|m| node.inbox.plan(&offer.sender.id, m)).collect::<Vec<_>>();
+    let slots = offer
+        .files
+        .iter()
+        .map(|m| node.inbox.plan(&offer.sender.id, m))
+        .collect::<Vec<_>>();
     let t = Arc::new(Transfer::new(TransferInit {
         id: offer.transfer_id.clone(),
         direction: Direction::In,
@@ -231,7 +289,10 @@ async fn receive_offer(
         peer_id: offer.sender.id.clone(),
         peer_name: offer.sender.name.chars().take(60).collect(),
         peer_platform: platform,
-        text: offer.text.clone().map(|s| s.chars().take(100_000).collect()),
+        text: offer
+            .text
+            .clone()
+            .map(|s| s.chars().take(100_000).collect()),
         verification,
         files: slots,
         status: Status::Waiting,
@@ -243,10 +304,18 @@ async fn receive_offer(
 
     if ask && !node.ask_user(&t).await {
         node.finish(&t);
-        return OfferReply { accepted: false, files: vec![], reason: Some("declined".into()) };
+        return OfferReply {
+            accepted: false,
+            files: vec![],
+            reason: Some("declined".into()),
+        };
     }
     if let Some(text) = &t.text {
-        node.emit(Event::TextReceived { transfer_id: t.id.clone(), from: offer.sender.clone(), text: text.clone() });
+        node.emit(Event::TextReceived {
+            transfer_id: t.id.clone(),
+            from: offer.sender.clone(),
+            text: text.clone(),
+        });
     }
     t.set_status(Status::Active, None);
     let plans = t.plans();
@@ -255,7 +324,11 @@ async fn receive_offer(
     } else {
         node.emit_transfer(&t);
     }
-    OfferReply { accepted: true, files: plans, reason: None }
+    OfferReply {
+        accepted: true,
+        files: plans,
+        reason: None,
+    }
 }
 
 #[derive(Deserialize)]
@@ -265,26 +338,53 @@ struct ChunkQuery {
     last: u8,
 }
 
-async fn b_upload(State(node): S, h: HeaderMap, Path((tid, fid)): Path<(String, String)>, Query(q): Query<ChunkQuery>, body: Bytes) -> Response {
+async fn b_upload(
+    State(node): S,
+    h: HeaderMap,
+    Path((tid, fid)): Path<(String, String)>,
+    Query(q): Query<ChunkQuery>,
+    body: Bytes,
+) -> Response {
     if let Err(r) = browser_key(&node, &h) {
         return r;
     }
     store_chunk(&node, PeerKind::Browser, &tid, &fid, q, &body).await
 }
 
-async fn p_upload(State(node): S, Path((tid, fid)): Path<(String, String)>, Query(q): Query<ChunkQuery>, body: Bytes) -> Response {
+async fn p_upload(
+    State(node): S,
+    Path((tid, fid)): Path<(String, String)>,
+    Query(q): Query<ChunkQuery>,
+    body: Bytes,
+) -> Response {
     store_chunk(&node, PeerKind::Device, &tid, &fid, q, &body).await
 }
 
-async fn store_chunk(node: &Arc<Node>, kind: PeerKind, tid: &str, fid: &str, q: ChunkQuery, body: &[u8]) -> Response {
-    let Some(t) = node.transfer(tid) else { return err(StatusCode::NOT_FOUND, "unknown transfer") };
+async fn store_chunk(
+    node: &Arc<Node>,
+    kind: PeerKind,
+    tid: &str,
+    fid: &str,
+    q: ChunkQuery,
+    body: &[u8],
+) -> Response {
+    let Some(t) = node.transfer(tid) else {
+        return err(StatusCode::NOT_FOUND, "unknown transfer");
+    };
     if t.kind != kind || t.direction != Direction::In {
         return err(StatusCode::NOT_FOUND, "unknown transfer");
     }
-    if t.is_canceled() || matches!(t.status(), Status::Canceled | Status::Declined | Status::Failed) {
+    if t.is_canceled()
+        || matches!(
+            t.status(),
+            Status::Canceled | Status::Declined | Status::Failed
+        )
+    {
         return err(StatusCode::GONE, "transfer canceled");
     }
-    let Some(idx) = t.file_index(fid) else { return err(StatusCode::NOT_FOUND, "unknown file") };
+    let Some(idx) = t.file_index(fid) else {
+        return err(StatusCode::NOT_FOUND, "unknown file");
+    };
     let last = q.last == 1;
     let plain = match crypto::open(&t.key, &crypto::chunk_aad(tid, fid, q.i, last), body) {
         Ok(p) => p,
@@ -305,7 +405,9 @@ async fn store_chunk(node: &Arc<Node>, kind: PeerKind, tid: &str, fid: &str, q: 
                     // Throttled progress events.
                     let due = {
                         let mut st = t.state.lock().unwrap();
-                        let due = st.last_emit.map_or(true, |x| x.elapsed() >= std::time::Duration::from_millis(150));
+                        let due = st.last_emit.map_or(true, |x| {
+                            x.elapsed() >= std::time::Duration::from_millis(150)
+                        });
                         if due {
                             st.last_emit = Some(std::time::Instant::now());
                         }
@@ -319,7 +421,9 @@ async fn store_chunk(node: &Arc<Node>, kind: PeerKind, tid: &str, fid: &str, q: 
             }
             Json(json!({ "next": next })).into_response()
         }
-        Err(ChunkError::OutOfOrder { expected, .. }) => (StatusCode::CONFLICT, Json(json!({ "next": expected }))).into_response(),
+        Err(ChunkError::OutOfOrder { expected, .. }) => {
+            (StatusCode::CONFLICT, Json(json!({ "next": expected }))).into_response()
+        }
         Err(ChunkError::Inactive) => err(StatusCode::GONE, "transfer canceled"),
         Err(ChunkError::BadSize) => err(StatusCode::BAD_REQUEST, "chunk has the wrong size"),
         Err(ChunkError::Io(e)) => {
@@ -331,27 +435,39 @@ async fn store_chunk(node: &Arc<Node>, kind: PeerKind, tid: &str, fid: &str, q: 
 }
 
 async fn status(State(node): S, Path((tid, fid)): Path<(String, String)>) -> Response {
-    let Some(t) = node.transfer(&tid) else { return err(StatusCode::NOT_FOUND, "unknown transfer") };
+    let Some(t) = node.transfer(&tid) else {
+        return err(StatusCode::NOT_FOUND, "unknown transfer");
+    };
     let st = t.state.lock().unwrap();
     match st.files.iter().find(|f| f.meta.id == fid) {
-        Some(f) => Json(json!({ "next": f.next_index, "status": t.view_locked(&st).status })).into_response(),
+        Some(f) => Json(json!({ "next": f.next_index, "status": t.view_locked(&st).status }))
+            .into_response(),
         None => err(StatusCode::NOT_FOUND, "unknown file"),
     }
 }
 
 /// Host → phone: serve one sealed chunk of an offered file.
-async fn b_download(State(node): S, h: HeaderMap, Path((tid, fid)): Path<(String, String)>, Query(q): Query<HashMap<String, String>>) -> Response {
+async fn b_download(
+    State(node): S,
+    h: HeaderMap,
+    Path((tid, fid)): Path<(String, String)>,
+    Query(q): Query<HashMap<String, String>>,
+) -> Response {
     if let Err(r) = browser_key(&node, &h) {
         return r;
     }
-    let Some(t) = node.transfer(&tid) else { return err(StatusCode::NOT_FOUND, "unknown transfer") };
+    let Some(t) = node.transfer(&tid) else {
+        return err(StatusCode::NOT_FOUND, "unknown transfer");
+    };
     if t.kind != PeerKind::Browser || t.direction != Direction::Out {
         return err(StatusCode::NOT_FOUND, "unknown transfer");
     }
     if t.status().is_final() && t.status() != Status::Done {
         return err(StatusCode::GONE, "transfer canceled");
     }
-    let Some(idx) = t.file_index(&fid) else { return err(StatusCode::NOT_FOUND, "unknown file") };
+    let Some(idx) = t.file_index(&fid) else {
+        return err(StatusCode::NOT_FOUND, "unknown file");
+    };
     let i: u64 = q.get("i").and_then(|s| s.parse().ok()).unwrap_or(0);
     let slot = t.state.lock().unwrap().files[idx].clone();
     let chunks = slot.meta.chunk_count();
@@ -361,7 +477,10 @@ async fn b_download(State(node): S, h: HeaderMap, Path((tid, fid)): Path<(String
     let data = match crate::sender::read_chunk(&slot.local, slot.meta.size, i).await {
         Ok(d) => d,
         Err(_) => {
-            t.set_status(Status::Failed, Some(format!("{} is no longer available", slot.meta.name)));
+            t.set_status(
+                Status::Failed,
+                Some(format!("{} is no longer available", slot.meta.name)),
+            );
             node.finish(&t);
             return err(StatusCode::GONE, "file is no longer available");
         }
@@ -376,12 +495,20 @@ async fn b_download(State(node): S, h: HeaderMap, Path((tid, fid)): Path<(String
     sealed(body)
 }
 
-async fn b_done(State(node): S, h: HeaderMap, Path((tid, fid)): Path<(String, String)>) -> Response {
+async fn b_done(
+    State(node): S,
+    h: HeaderMap,
+    Path((tid, fid)): Path<(String, String)>,
+) -> Response {
     if let Err(r) = browser_key(&node, &h) {
         return r;
     }
-    let Some(t) = node.transfer(&tid) else { return err(StatusCode::NOT_FOUND, "unknown transfer") };
-    let Some(idx) = t.file_index(&fid) else { return err(StatusCode::NOT_FOUND, "unknown file") };
+    let Some(t) = node.transfer(&tid) else {
+        return err(StatusCode::NOT_FOUND, "unknown transfer");
+    };
+    let Some(idx) = t.file_index(&fid) else {
+        return err(StatusCode::NOT_FOUND, "unknown file");
+    };
     {
         let mut st = t.state.lock().unwrap();
         let f = &mut st.files[idx];
@@ -403,7 +530,12 @@ struct CancelQuery {
     decline: u8,
 }
 
-async fn b_cancel(State(node): S, h: HeaderMap, Path(tid): Path<String>, Query(q): Query<CancelQuery>) -> Response {
+async fn b_cancel(
+    State(node): S,
+    h: HeaderMap,
+    Path(tid): Path<String>,
+    Query(q): Query<CancelQuery>,
+) -> Response {
     if let Err(r) = browser_key(&node, &h) {
         return r;
     }
@@ -415,7 +547,9 @@ async fn p_cancel(State(node): S, Path(tid): Path<String>) -> Response {
 }
 
 fn cancel_common(node: &Arc<Node>, tid: &str, kind: PeerKind, decline: bool) -> Response {
-    let Some(t) = node.transfer(tid) else { return err(StatusCode::NOT_FOUND, "unknown transfer") };
+    let Some(t) = node.transfer(tid) else {
+        return err(StatusCode::NOT_FOUND, "unknown transfer");
+    };
     if t.kind != kind {
         return err(StatusCode::NOT_FOUND, "unknown transfer");
     }
@@ -433,11 +567,17 @@ fn cancel_common(node: &Arc<Node>, tid: &str, kind: PeerKind, decline: bool) -> 
 
 // ----- native peers ----------------------------------------------------------------------------
 
-async fn p_offer(State(node): S, ConnectInfo(remote): ConnectInfo<SocketAddr>, h: HeaderMap, body: Bytes) -> Response {
+async fn p_offer(
+    State(node): S,
+    ConnectInfo(remote): ConnectInfo<SocketAddr>,
+    h: HeaderMap,
+    body: Bytes,
+) -> Response {
     let (Some(epk), Some(spk)) = (header_str(&h, "x-td-epk"), header_str(&h, "x-td-spk")) else {
         return err(StatusCode::BAD_REQUEST, "missing keys");
     };
-    let (Ok(epk_k), Ok(spk_k)) = (crypto::public_from_b64(epk), crypto::public_from_b64(spk)) else {
+    let (Ok(epk_k), Ok(spk_k)) = (crypto::public_from_b64(epk), crypto::public_from_b64(spk))
+    else {
         return err(StatusCode::BAD_REQUEST, "bad keys");
     };
     let key = crypto::peer_key_receiver(&node.identity, &epk_k, &spk_k);
@@ -450,9 +590,21 @@ async fn p_offer(State(node): S, ConnectInfo(remote): ConnectInfo<SocketAddr>, h
     let (trusted, key_changed) = node.trust_state(&offer.sender.id, spk);
     let verification = crypto::verification_code(node.identity.public.as_bytes(), spk_k.as_bytes());
     let ask = key_changed || (node.settings().require_approval && !trusted);
-    tracing::info!("offer from {} ({remote}), trusted={trusted}", offer.sender.name);
+    tracing::info!(
+        "offer from {} ({remote}), trusted={trusted}",
+        offer.sender.name
+    );
     let platform = offer.sender.platform.clone();
-    let reply = receive_offer(&node, key.clone(), offer, PeerKind::Device, platform, Some(verification), ask).await;
+    let reply = receive_offer(
+        &node,
+        key.clone(),
+        offer,
+        PeerKind::Device,
+        platform,
+        Some(verification),
+        ask,
+    )
+    .await;
     sealed(crypto::seal_json(&key, "offer-reply", &reply))
 }
 
@@ -463,17 +615,26 @@ async fn static_file(uri: Uri) -> Response {
     let path = if path.is_empty() { "index.html" } else { path };
     let (file, name) = match WebAssets::get(path) {
         Some(f) => (f, path.to_string()),
-        None if !path.starts_with("api/") && !path.contains('.') => match WebAssets::get("index.html") {
-            Some(f) => (f, "index.html".to_string()),
-            None => return err(StatusCode::NOT_FOUND, "not found"),
-        },
+        None if !path.starts_with("api/") && !path.contains('.') => {
+            match WebAssets::get("index.html") {
+                Some(f) => (f, "index.html".to_string()),
+                None => return err(StatusCode::NOT_FOUND, "not found"),
+            }
+        }
         None => return err(StatusCode::NOT_FOUND, "not found"),
     };
     let mime = mime_guess::from_path(&name).first_or_octet_stream();
     let mut r = (StatusCode::OK, file.data.into_owned()).into_response();
     let hd = r.headers_mut();
-    hd.insert(header::CONTENT_TYPE, HeaderValue::from_str(mime.as_ref()).unwrap_or(HeaderValue::from_static("application/octet-stream")));
-    hd.insert("x-content-type-options", HeaderValue::from_static("nosniff"));
+    hd.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_str(mime.as_ref())
+            .unwrap_or(HeaderValue::from_static("application/octet-stream")),
+    );
+    hd.insert(
+        "x-content-type-options",
+        HeaderValue::from_static("nosniff"),
+    );
     hd.insert("referrer-policy", HeaderValue::from_static("no-referrer"));
     if name == "index.html" {
         hd.insert(header::CACHE_CONTROL, HeaderValue::from_static("no-cache"));
@@ -487,7 +648,10 @@ async fn static_file(uri: Uri) -> Response {
         );
         hd.insert("x-frame-options", HeaderValue::from_static("DENY"));
     } else if name.starts_with("assets/") {
-        hd.insert(header::CACHE_CONTROL, HeaderValue::from_static("public, max-age=31536000, immutable"));
+        hd.insert(
+            header::CACHE_CONTROL,
+            HeaderValue::from_static("public, max-age=31536000, immutable"),
+        );
     }
     r
 }

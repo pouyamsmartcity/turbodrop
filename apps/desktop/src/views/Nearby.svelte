@@ -23,8 +23,10 @@
       ...store.onlinePhones.map((c) => ({ id: c.id, kind: 'browser' as const, name: c.name, platform: c.platform })),
     ];
     return items.map((it, i) => {
-      const angle = (hash(it.id) + i / Math.max(1, items.length)) * Math.PI * 2;
-      const r = 0.3 + (hash(it.id + 'r') * 0.14 + (i % 2) * 0.1);
+      // Spread evenly around the circle, alternating rings, with a small stable wobble per device.
+      const n = Math.max(1, items.length);
+      const angle = ((i + hash(it.id) * 0.5) / n) * Math.PI * 2 - Math.PI / 2;
+      const r = i % 2 ? 0.27 : 0.4;
       return { ...it, x: 50 + Math.cos(angle) * r * 100, y: 50 + Math.sin(angle) * r * 100 };
     });
   });

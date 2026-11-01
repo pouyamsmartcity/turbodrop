@@ -38,7 +38,7 @@
     "homepage": "https://pouyamsmartcity.github.io/turbodrop/",
     "copyright": "© 2026 Pouyam — MIT License",
     "category": "Utility",
-    "shortDescription": "AirDrop for every device",
+    "shortDescription": "Like AirDrop, for every device",
     "longDescription": "Turbodrop sends files between Windows, iPhone, Android, Mac and Linux over your local network. Phones need no app: scan the QR code. End-to-end encrypted, resumable, free and open source. Made by Pouyam.",
     "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
     "windows": {

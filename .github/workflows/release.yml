@@ -1,0 +1,90 @@
+name: Release
+
+# Push a tag like v0.1.0 to build installers and CLI binaries for every platform and publish a GitHub release.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  desktop:
+    name: Desktop (${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x64
+            os: windows-latest
+            args: ''
+          - name: macOS (Apple silicon)
+            os: macos-latest
+            args: --target aarch64-apple-darwin
+          - name: macOS (Intel)
+            os: macos-latest
+            args: --target x86_64-apple-darwin
+          - name: Linux x64
+            os: ubuntu-22.04
+            args: ''
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Linux system libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: Swatinem/rust-cache@v2
+      - run: npm ci
+      - run: npm run build:web
+      - uses: tauri-apps/tauri-action@action-v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/desktop
+          tagName: ${{ github.ref_name }}
+          releaseName: Turbodrop ${{ github.ref_name }}
+          releaseBody: See the [changelog](https://github.com/pouyamsmartcity/turbodrop/blob/main/CHANGELOG.md). Windows → `Turbodrop_*_x64-setup.exe`. Phones need nothing — scan the QR code in the app.
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  cli:
+    name: CLI (${{ matrix.asset }})
+    needs: desktop
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, asset: turbodrop-windows-x64.exe, bin: turbodrop.exe }
+          - { os: ubuntu-22.04, target: x86_64-unknown-linux-gnu, asset: turbodrop-linux-x64, bin: turbodrop }
+          - { os: macos-latest, target: aarch64-apple-darwin, asset: turbodrop-macos-arm64, bin: turbodrop }
+          - { os: macos-latest, target: x86_64-apple-darwin, asset: turbodrop-macos-x64, bin: turbodrop }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:web
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release -p turbodrop-cli --target ${{ matrix.target }}
+      - name: Rename
+        shell: bash
+        run: cp target/${{ matrix.target }}/release/${{ matrix.bin }} ${{ matrix.asset }}
+      - uses: softprops/action-gh-release@v3.0.3
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ${{ matrix.asset }}

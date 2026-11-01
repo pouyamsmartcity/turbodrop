@@ -168,7 +168,11 @@ impl Transfer {
             total_bytes: st.files.iter().map(|f| f.meta.size).sum(),
             done_bytes: st.files.iter().map(|f| f.done_bytes).sum(),
             files,
-            speed: if st.status == Status::Active { st.meter.speed() } else { 0.0 },
+            speed: if st.status == Status::Active {
+                st.meter.speed()
+            } else {
+                0.0
+            },
             started_at: st.started_at,
             finished_at: st.finished_at,
             text: self.text.clone(),
@@ -217,7 +221,12 @@ impl Transfer {
     }
 
     pub fn file_index(&self, file_id: &str) -> Option<usize> {
-        self.state.lock().unwrap().files.iter().position(|f| f.meta.id == file_id)
+        self.state
+            .lock()
+            .unwrap()
+            .files
+            .iter()
+            .position(|f| f.meta.id == file_id)
     }
 
     /// Recompute the overall status after a file finished.
@@ -226,7 +235,10 @@ impl Transfer {
         if st.status.is_final() {
             return false;
         }
-        let all_done = st.files.iter().all(|f| matches!(f.status, FileStatus::Done | FileStatus::Skipped));
+        let all_done = st
+            .files
+            .iter()
+            .all(|f| matches!(f.status, FileStatus::Done | FileStatus::Skipped));
         if all_done {
             st.status = Status::Done;
             st.finished_at = Some(now_ms());
@@ -244,10 +256,17 @@ impl Transfer {
         let f = &mut st.files[idx];
         f.next_index = next_index;
         f.done_bytes = done_bytes;
-        f.status = if file_done { FileStatus::Done } else { FileStatus::Active };
+        f.status = if file_done {
+            FileStatus::Done
+        } else {
+            FileStatus::Active
+        };
         let total: u64 = st.files.iter().map(|f| f.done_bytes).sum();
         st.meter.record(total);
-        let due = file_done || st.last_emit.map_or(true, |t| t.elapsed() >= Duration::from_millis(150));
+        let due = file_done
+            || st
+                .last_emit
+                .map_or(true, |t| t.elapsed() >= Duration::from_millis(150));
         if due {
             st.last_emit = Some(Instant::now());
         }
@@ -260,7 +279,11 @@ impl Transfer {
             .iter()
             .map(|f| FilePlan {
                 id: f.meta.id.clone(),
-                decision: if f.status == FileStatus::Skipped { FileDecision::Skip } else { FileDecision::Send },
+                decision: if f.status == FileStatus::Skipped {
+                    FileDecision::Skip
+                } else {
+                    FileDecision::Send
+                },
                 next_index: f.next_index,
             })
             .collect()
@@ -317,7 +340,11 @@ impl Inbox {
             .ok()
             .and_then(|b| serde_json::from_slice(&b).ok())
             .unwrap_or_default();
-        Inbox { dir: Mutex::new(dir), store, partials: Mutex::new(partials) }
+        Inbox {
+            dir: Mutex::new(dir),
+            store,
+            partials: Mutex::new(partials),
+        }
     }
 
     pub fn dir(&self) -> PathBuf {
@@ -349,7 +376,10 @@ impl Inbox {
 
         if let Some(rec) = self.partials.lock().unwrap().get(&key).cloned() {
             let part = paths::part_path(&rec.target);
-            let expected = rec.next_index.saturating_mul(CHUNK_SIZE as u64).min(rec.size);
+            let expected = rec
+                .next_index
+                .saturating_mul(CHUNK_SIZE as u64)
+                .min(rec.size);
             if let Ok(md) = std::fs::metadata(&part) {
                 if md.len() >= expected && rec.size == meta.size {
                     // Drop anything past the last confirmed chunk before continuing.
@@ -410,7 +440,8 @@ impl Inbox {
     fn save_locked(&self, p: &HashMap<String, PartialRecord>) {
         // Keep the record small: drop partials untouched for 7 days.
         let cutoff = now_ms() - 7 * 24 * 3600 * 1000;
-        let kept: HashMap<&String, &PartialRecord> = p.iter().filter(|(_, r)| r.updated > cutoff).collect();
+        let kept: HashMap<&String, &PartialRecord> =
+            p.iter().filter(|(_, r)| r.updated > cutoff).collect();
         if let Some(parent) = self.store.parent() {
             let _ = std::fs::create_dir_all(parent);
         }
@@ -441,7 +472,10 @@ impl Inbox {
             return Ok(ChunkOutcome::Duplicate);
         }
         if index > slot.next_index {
-            return Err(ChunkError::OutOfOrder { got: index, expected: slot.next_index });
+            return Err(ChunkError::OutOfOrder {
+                got: index,
+                expected: slot.next_index,
+            });
         }
         let chunks = slot.meta.chunk_count();
         let offset = index * CHUNK_SIZE as u64;
@@ -454,7 +488,12 @@ impl Inbox {
         if let Some(parent) = part.parent() {
             tokio::fs::create_dir_all(parent).await?;
         }
-        let mut f = tokio::fs::OpenOptions::new().create(true).write(true).truncate(false).open(&part).await?;
+        let mut f = tokio::fs::OpenOptions::new()
+            .create(true)
+            .write(true)
+            .truncate(false)
+            .open(&part)
+            .await?;
         f.set_len(offset).await?;
         f.seek(std::io::SeekFrom::Start(offset)).await?;
         f.write_all(data).await?;
@@ -466,14 +505,23 @@ impl Inbox {
         if !last {
             self.remember(
                 &slot.resume_key,
-                PartialRecord { target: slot.local.clone(), next_index: next, size: slot.meta.size, updated: now_ms() },
+                PartialRecord {
+                    target: slot.local.clone(),
+                    next_index: next,
+                    size: slot.meta.size,
+                    updated: now_ms(),
+                },
             );
             transfer.progress(idx, next, done_bytes, false);
             return Ok(ChunkOutcome::Stored);
         }
 
         // Finished: move into place without overwriting anything that appeared meanwhile.
-        let final_path = if slot.local.exists() { paths::unique_path(&slot.local) } else { slot.local.clone() };
+        let final_path = if slot.local.exists() {
+            paths::unique_path(&slot.local)
+        } else {
+            slot.local.clone()
+        };
         tokio::fs::rename(&part, &final_path).await?;
         if let Some(ms) = slot.meta.modified {
             set_mtime(&final_path, ms);
@@ -501,13 +549,20 @@ impl Inbox {
 /// Same name, same size and same modification time (we restore the sender's mtime on every
 /// received file, so a second send of an unchanged file matches).
 fn is_same_file(path: &Path, meta: &FileMeta) -> bool {
-    let Ok(md) = std::fs::metadata(path) else { return false };
+    let Ok(md) = std::fs::metadata(path) else {
+        return false;
+    };
     if !md.is_file() || md.len() != meta.size {
         return false;
     }
-    let Some(want) = meta.modified else { return false };
+    let Some(want) = meta.modified else {
+        return false;
+    };
     let Ok(m) = md.modified() else { return false };
-    let have = m.duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis() as i64).unwrap_or(-1);
+    let have = m
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_millis() as i64)
+        .unwrap_or(-1);
     // FAT/exFAT keep 2-second precision.
     (have - want).abs() <= 2000
 }
@@ -523,5 +578,9 @@ fn set_mtime(path: &Path, ms: i64) {
 }
 
 pub fn file_mtime_ms(md: &std::fs::Metadata) -> Option<i64> {
-    md.modified().ok()?.duration_since(std::time::UNIX_EPOCH).ok().map(|d| d.as_millis() as i64)
+    md.modified()
+        .ok()?
+        .duration_since(std::time::UNIX_EPOCH)
+        .ok()
+        .map(|d| d.as_millis() as i64)
 }

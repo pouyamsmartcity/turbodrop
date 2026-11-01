@@ -126,7 +126,7 @@
       </button>
       <h1>{t('send.button')}</h1>
       <p class="muted">
-        {t('send.hint')}{#if app.host}<span class="to"> · {t('send.toComputer', { name: app.host.name })}</span>{/if}
+        {t('send.hint')}{#if app.host}<br /><span class="to">{t('send.toComputer', { name: app.host.name })}</span>{/if}
       </p>
       <div class="row">
         <button class="btn" disabled={!ready} onclick={() => folderInput?.click()}><Icon name="folder" size={18} />{t('send.folder')}</button>
@@ -217,8 +217,11 @@
     height: 34px;
   }
   .lang select {
+    appearance: none;
+    -webkit-appearance: none;
     background: transparent;
     border: 0;
+    padding: 0 2px;
     font-size: 13px;
     color: var(--text);
     outline: none;
@@ -279,6 +282,11 @@
   .hero p {
     margin: 0 0 14px;
     font-size: 14px;
+    line-height: 1.6;
+  }
+  .to {
+    color: var(--text);
+    font-weight: 600;
   }
   .row {
     display: flex;

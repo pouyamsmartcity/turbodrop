@@ -48,8 +48,14 @@ fn open_socket(port: u16) -> std::io::Result<UdpSocket> {
 
 /// Send an announce on every interface (multicast picks one interface per send otherwise).
 async fn announce(node: &Node, sock: &UdpSocket, reply: bool) {
-    let packet = Announce { proto: PROTOCOL.to_string(), device: node.info(), reply };
-    let Ok(bytes) = serde_json::to_vec(&packet) else { return };
+    let packet = Announce {
+        proto: PROTOCOL.to_string(),
+        device: node.info(),
+        reply,
+    };
+    let Ok(bytes) = serde_json::to_vec(&packet) else {
+        return;
+    };
     let dest = SocketAddr::V4(SocketAddrV4::new(group(), node.discovery_port));
     let sref = socket2::SockRef::from(sock);
     let ifaces = local_v4();

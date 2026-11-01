@@ -34,7 +34,10 @@ pub enum Status {
 
 impl Status {
     pub fn is_final(self) -> bool {
-        matches!(self, Status::Done | Status::Declined | Status::Canceled | Status::Failed)
+        matches!(
+            self,
+            Status::Done | Status::Declined | Status::Canceled | Status::Failed
+        )
     }
 }
 
@@ -120,13 +123,27 @@ pub struct BrowserClient {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum Event {
-    PeerUpdate { peer: Peer },
-    PeerLost { id: String },
-    BrowserUpdate { client: BrowserClient },
+    PeerUpdate {
+        peer: Peer,
+    },
+    PeerLost {
+        id: String,
+    },
+    BrowserUpdate {
+        client: BrowserClient,
+    },
     /// An incoming transfer that waits for the user to accept or decline.
-    IncomingRequest { transfer: TransferView },
-    TransferUpdate { transfer: TransferView },
-    TextReceived { transfer_id: String, from: SenderInfo, text: String },
+    IncomingRequest {
+        transfer: TransferView,
+    },
+    TransferUpdate {
+        transfer: TransferView,
+    },
+    TextReceived {
+        transfer_id: String,
+        from: SenderInfo,
+        text: String,
+    },
     /// The browser room key was rotated; old QR codes stop working.
     RoomRotated,
 }

@@ -161,7 +161,12 @@ mod tests {
     fn offer_json_shape_is_camel_case() {
         let o = Offer {
             transfer_id: "t".into(),
-            sender: SenderInfo { id: "s".into(), name: "n".into(), platform: "ios".into(), public_key: None },
+            sender: SenderInfo {
+                id: "s".into(),
+                name: "n".into(),
+                platform: "ios".into(),
+                public_key: None,
+            },
             files: vec![FileMeta {
                 id: "f".into(),
                 name: "a.txt".into(),

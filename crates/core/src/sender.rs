@@ -11,7 +11,9 @@ use tokio::io::{AsyncReadExt, AsyncSeekExt};
 use crate::crypto::{self, Key};
 use crate::events::{Direction, FileStatus, Peer, PeerKind, Status};
 use crate::node::Node;
-use crate::protocol::{DeviceInfo, FileDecision, FileMeta, Offer, OfferReply, SenderInfo, CHUNK_SIZE};
+use crate::protocol::{
+    DeviceInfo, FileDecision, FileMeta, Offer, OfferReply, SenderInfo, CHUNK_SIZE,
+};
 use crate::transfer::{file_mtime_ms, FileSlot, Transfer, TransferInit};
 
 const MAX_FILES: usize = 100_000;
@@ -23,8 +25,12 @@ const PARALLEL_FILES: usize = 3;
 pub fn collect_files(paths: &[PathBuf]) -> anyhow::Result<Vec<(PathBuf, FileMeta)>> {
     let mut out = Vec::new();
     for p in paths {
-        let md = std::fs::symlink_metadata(p).with_context(|| format!("cannot read {}", p.display()))?;
-        let name = p.file_name().map(|s| s.to_string_lossy().into_owned()).unwrap_or_else(|| "file".into());
+        let md =
+            std::fs::symlink_metadata(p).with_context(|| format!("cannot read {}", p.display()))?;
+        let name = p
+            .file_name()
+            .map(|s| s.to_string_lossy().into_owned())
+            .unwrap_or_else(|| "file".into());
         if md.is_dir() {
             walk(p, &name, &mut out)?;
         } else if md.is_file() {
@@ -70,7 +76,9 @@ fn meta_for(name: &str, rel: &str, md: &std::fs::Metadata, path: &Path) -> FileM
         name: name.to_string(),
         path: rel.to_string(),
         size: md.len(),
-        mime: mime_guess::from_path(path).first().map(|m| m.essence_str().to_string()),
+        mime: mime_guess::from_path(path)
+            .first()
+            .map(|m| m.essence_str().to_string()),
         modified: file_mtime_ms(md),
         hash: None,
     }
@@ -93,7 +101,12 @@ fn out_slots(files: Vec<(PathBuf, FileMeta)>) -> Vec<FileSlot> {
 
 pub(crate) fn sender_info(node: &Node) -> SenderInfo {
     let me = node.info();
-    SenderInfo { id: me.id, name: me.name, platform: me.platform, public_key: Some(me.public_key) }
+    SenderInfo {
+        id: me.id,
+        name: me.name,
+        platform: me.platform,
+        public_key: Some(me.public_key),
+    }
 }
 
 /// Read chunk `index` of a file.
@@ -119,7 +132,8 @@ pub async fn send_to_peer(
     if files.is_empty() && text.as_deref().map_or(true, str::is_empty) {
         bail!("nothing to send");
     }
-    let receiver = crypto::public_from_b64(&peer.device.public_key).map_err(|_| anyhow!("device has a bad key"))?;
+    let receiver = crypto::public_from_b64(&peer.device.public_key)
+        .map_err(|_| anyhow!("device has a bad key"))?;
     let (eph, key) = crypto::peer_key_sender(&node.identity, &receiver);
     let id = crypto::random_id(12);
     let t = Arc::new(Transfer::new(TransferInit {
@@ -167,11 +181,23 @@ fn base64_url(b: &[u8]) -> String {
     base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(b)
 }
 
-async fn run_peer_send(node: &Arc<Node>, t: &Arc<Transfer>, base: &str, epk: &str) -> anyhow::Result<()> {
+async fn run_peer_send(
+    node: &Arc<Node>,
+    t: &Arc<Transfer>,
+    base: &str,
+    epk: &str,
+) -> anyhow::Result<()> {
     let offer = Offer {
         transfer_id: t.id.clone(),
         sender: sender_info(node),
-        files: t.state.lock().unwrap().files.iter().map(|f| f.meta.clone()).collect(),
+        files: t
+            .state
+            .lock()
+            .unwrap()
+            .files
+            .iter()
+            .map(|f| f.meta.clone())
+            .collect(),
         text: t.text.clone(),
     };
     let body = crypto::seal_json(&t.key, "offer", &offer);
@@ -189,7 +215,8 @@ async fn run_peer_send(node: &Arc<Node>, t: &Arc<Transfer>, base: &str, epk: &st
         bail!("the device refused the transfer ({})", resp.status());
     }
     let bytes = resp.bytes().await?;
-    let reply: OfferReply = crypto::open_json(&t.key, "offer-reply", &bytes).context("bad reply")?;
+    let reply: OfferReply =
+        crypto::open_json(&t.key, "offer-reply", &bytes).context("bad reply")?;
     if !reply.accepted {
         bail!("declined");
     }
@@ -229,7 +256,12 @@ async fn run_peer_send(node: &Arc<Node>, t: &Arc<Transfer>, base: &str, epk: &st
     Ok(())
 }
 
-async fn upload_file(node: &Arc<Node>, t: &Arc<Transfer>, base: &str, idx: usize) -> anyhow::Result<()> {
+async fn upload_file(
+    node: &Arc<Node>,
+    t: &Arc<Transfer>,
+    base: &str,
+    idx: usize,
+) -> anyhow::Result<()> {
     let slot = t.state.lock().unwrap().files[idx].clone();
     if slot.status == FileStatus::Skipped {
         return Ok(());
@@ -246,9 +278,22 @@ async fn upload_file(node: &Arc<Node>, t: &Arc<Transfer>, base: &str, idx: usize
             .await
             .with_context(|| format!("cannot read {}", slot.local.display()))?;
         let len = data.len() as u64;
-        let sealed = crypto::seal(&t.key, &crypto::chunk_aad(&t.id, &slot.meta.id, index, last), &data);
-        let url = format!("{base}/api/v1/p/upload/{}/{}?i={index}&last={}", t.id, slot.meta.id, last as u8);
-        let res = node.http.put(&url).timeout(Duration::from_secs(60)).body(sealed).send().await;
+        let sealed = crypto::seal(
+            &t.key,
+            &crypto::chunk_aad(&t.id, &slot.meta.id, index, last),
+            &data,
+        );
+        let url = format!(
+            "{base}/api/v1/p/upload/{}/{}?i={index}&last={}",
+            t.id, slot.meta.id, last as u8
+        );
+        let res = node
+            .http
+            .put(&url)
+            .timeout(Duration::from_secs(60))
+            .body(sealed)
+            .send()
+            .await;
         match res {
             Ok(r) if r.status().is_success() => {
                 failing_since = None;
@@ -299,8 +344,20 @@ async fn upload_file(node: &Arc<Node>, t: &Arc<Transfer>, base: &str, idx: usize
 pub(crate) fn browser_offer(me: &DeviceInfo, t: &Transfer) -> Offer {
     Offer {
         transfer_id: t.id.clone(),
-        sender: SenderInfo { id: me.id.clone(), name: me.name.clone(), platform: me.platform.clone(), public_key: None },
-        files: t.state.lock().unwrap().files.iter().map(|f| f.meta.clone()).collect(),
+        sender: SenderInfo {
+            id: me.id.clone(),
+            name: me.name.clone(),
+            platform: me.platform.clone(),
+            public_key: None,
+        },
+        files: t
+            .state
+            .lock()
+            .unwrap()
+            .files
+            .iter()
+            .map(|f| f.meta.clone())
+            .collect(),
         text: t.text.clone(),
     }
 }
@@ -323,7 +380,13 @@ pub async fn send_to_browsers(
                 Some(id) => c.info.id == id,
                 None => c.info.online,
             })
-            .map(|c| (c.info.id.clone(), c.info.name.clone(), c.info.platform.clone()))
+            .map(|c| {
+                (
+                    c.info.id.clone(),
+                    c.info.name.clone(),
+                    c.info.platform.clone(),
+                )
+            })
             .collect()
     };
     if targets.is_empty() {

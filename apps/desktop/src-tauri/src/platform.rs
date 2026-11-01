@@ -20,9 +20,15 @@ pub fn keep_awake_thread() -> mpsc::Sender<bool> {
 
 #[cfg(windows)]
 fn set_awake(on: bool) {
-    use windows_sys::Win32::System::Power::{SetThreadExecutionState, ES_CONTINUOUS, ES_SYSTEM_REQUIRED};
+    use windows_sys::Win32::System::Power::{
+        SetThreadExecutionState, ES_CONTINUOUS, ES_SYSTEM_REQUIRED,
+    };
     unsafe {
-        SetThreadExecutionState(if on { ES_CONTINUOUS | ES_SYSTEM_REQUIRED } else { ES_CONTINUOUS });
+        SetThreadExecutionState(if on {
+            ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+        } else {
+            ES_CONTINUOUS
+        });
     }
 }
 
@@ -37,7 +43,10 @@ pub fn set_context_menu(enable: bool) -> std::io::Result<()> {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     let exe = std::env::current_exe()?;
     let exe = exe.to_string_lossy();
-    for base in ["Software\\Classes\\*\\shell\\Turbodrop", "Software\\Classes\\Directory\\shell\\Turbodrop"] {
+    for base in [
+        "Software\\Classes\\*\\shell\\Turbodrop",
+        "Software\\Classes\\Directory\\shell\\Turbodrop",
+    ] {
         if enable {
             let (key, _) = hkcu.create_subkey(base)?;
             key.set_value("", &"Send with Turbodrop")?;

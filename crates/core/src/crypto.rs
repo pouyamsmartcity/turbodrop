@@ -52,7 +52,9 @@ impl Key {
     }
 
     pub fn from_b64(s: &str) -> Result<Self, CryptoError> {
-        let v = URL_SAFE_NO_PAD.decode(s.trim()).map_err(|_| CryptoError::Encoding)?;
+        let v = URL_SAFE_NO_PAD
+            .decode(s.trim())
+            .map_err(|_| CryptoError::Encoding)?;
         let arr: [u8; KEY_LEN] = v.try_into().map_err(|_| CryptoError::Encoding)?;
         Ok(Key(arr))
     }
@@ -61,7 +63,8 @@ impl Key {
     pub fn derive(&self, label: &str) -> Key {
         let hk = Hkdf::<Sha256>::new(None, &self.0);
         let mut out = [0u8; KEY_LEN];
-        hk.expand(label.as_bytes(), &mut out).expect("32 bytes is a valid HKDF length");
+        hk.expand(label.as_bytes(), &mut out)
+            .expect("32 bytes is a valid HKDF length");
         Key(out)
     }
 }
@@ -84,10 +87,21 @@ pub fn random_nonce() -> [u8; NONCE_LEN] {
 }
 
 /// Seal with an explicit nonce (used by tests and test vectors). Output: nonce || ciphertext || tag.
-pub fn seal_with_nonce(key: &Key, nonce: &[u8; NONCE_LEN], aad: &[u8], plaintext: &[u8]) -> Vec<u8> {
+pub fn seal_with_nonce(
+    key: &Key,
+    nonce: &[u8; NONCE_LEN],
+    aad: &[u8],
+    plaintext: &[u8],
+) -> Vec<u8> {
     let cipher = XChaCha20Poly1305::new((&key.0).into());
     let ct = cipher
-        .encrypt(XNonce::from_slice(nonce), Payload { msg: plaintext, aad })
+        .encrypt(
+            XNonce::from_slice(nonce),
+            Payload {
+                msg: plaintext,
+                aad,
+            },
+        )
         .expect("XChaCha20-Poly1305 encryption cannot fail for in-memory buffers");
     let mut out = Vec::with_capacity(NONCE_LEN + ct.len());
     out.extend_from_slice(nonce);
@@ -127,7 +141,11 @@ pub fn seal_json<T: serde::Serialize>(key: &Key, purpose: &str, value: &T) -> Ve
     seal(key, &json_aad(purpose), &bytes)
 }
 
-pub fn open_json<T: serde::de::DeserializeOwned>(key: &Key, purpose: &str, sealed: &[u8]) -> anyhow::Result<T> {
+pub fn open_json<T: serde::de::DeserializeOwned>(
+    key: &Key,
+    purpose: &str,
+    sealed: &[u8],
+) -> anyhow::Result<T> {
     let bytes = open(key, &json_aad(purpose), sealed)?;
     Ok(serde_json::from_slice(&bytes)?)
 }
@@ -184,8 +202,9 @@ pub fn fingerprint(public: &[u8; 32]) -> String {
 /// Emoji verification code both screens show for a pair of devices. Order-independent.
 pub fn verification_code(a: &[u8; 32], b: &[u8; 32]) -> String {
     const EMOJI: [&str; 32] = [
-        "🚀", "🌙", "🍉", "🎧", "🦊", "🌵", "⚡", "🎈", "🐳", "🍀", "🔥", "🎲", "🦋", "🍩", "🌈", "🐢",
-        "🎯", "🧊", "🌻", "🐙", "🍋", "🛸", "🎸", "🦉", "🍄", "⛵", "🐝", "🧩", "🌊", "🦄", "🍒", "🔑",
+        "🚀", "🌙", "🍉", "🎧", "🦊", "🌵", "⚡", "🎈", "🐳", "🍀", "🔥", "🎲", "🦋", "🍩", "🌈",
+        "🐢", "🎯", "🧊", "🌻", "🐙", "🍋", "🛸", "🎸", "🦉", "🍄", "⛵", "🐝", "🧩", "🌊", "🦄",
+        "🍒", "🔑",
     ];
     let (x, y) = if a <= b { (a, b) } else { (b, a) };
     let mut h = Sha256::new();
@@ -193,7 +212,11 @@ pub fn verification_code(a: &[u8; 32], b: &[u8; 32]) -> String {
     h.update(x);
     h.update(y);
     let d = h.finalize();
-    d[..4].iter().map(|b| EMOJI[(*b as usize) % 32]).collect::<Vec<_>>().join(" ")
+    d[..4]
+        .iter()
+        .map(|b| EMOJI[(*b as usize) % 32])
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 /// Sender side of the native peer handshake. Returns (ephemeral public key, session key).
@@ -210,7 +233,13 @@ pub fn peer_key_sender(me: &Identity, receiver: &PublicKey) -> (PublicKey, Key) 
 pub fn peer_key_receiver(me: &Identity, eph_pub: &PublicKey, sender_static: &PublicKey) -> Key {
     let es = me.secret.diffie_hellman(eph_pub);
     let ss = me.secret.diffie_hellman(sender_static);
-    peer_kdf(es.as_bytes(), ss.as_bytes(), eph_pub, sender_static, &me.public)
+    peer_kdf(
+        es.as_bytes(),
+        ss.as_bytes(),
+        eph_pub,
+        sender_static,
+        &me.public,
+    )
 }
 
 fn peer_kdf(es: &[u8; 32], ss: &[u8; 32], e: &PublicKey, s: &PublicKey, r: &PublicKey) -> Key {
@@ -254,7 +283,10 @@ mod tests {
         let last = s.len() - 1;
         s[last] ^= 1;
         assert!(open(&k, b"aad", &s).is_err());
-        assert!(matches!(open(&k, b"aad", &[0u8; 10]), Err(CryptoError::Short)));
+        assert!(matches!(
+            open(&k, b"aad", &[0u8; 10]),
+            Err(CryptoError::Short)
+        ));
     }
 
     #[test]
@@ -311,7 +343,10 @@ mod tests {
             serde_json::from_str(include_str!("../../../test-vectors/crypto.json")).unwrap();
         assert_eq!(auth_token(&root), v["authToken"].as_str().unwrap());
         assert_eq!(data.to_b64(), v["dataKey"].as_str().unwrap());
-        assert_eq!(URL_SAFE_NO_PAD.encode(&sealed), v["sealedChunk"].as_str().unwrap());
+        assert_eq!(
+            URL_SAFE_NO_PAD.encode(&sealed),
+            v["sealedChunk"].as_str().unwrap()
+        );
     }
 }
 
@@ -323,7 +358,12 @@ mod vector_gen {
     fn print_vectors() {
         let root = Key([7u8; 32]);
         let data = root.derive(LABEL_DATA);
-        let sealed = seal_with_nonce(&data, &[9u8; 24], &chunk_aad("T", "F", 0, true), b"turbodrop");
+        let sealed = seal_with_nonce(
+            &data,
+            &[9u8; 24],
+            &chunk_aad("T", "F", 0, true),
+            b"turbodrop",
+        );
         let json_sealed = seal_with_nonce(&data, &[5u8; 24], &json_aad("hello"), br#"{"a":1}"#);
         println!(
             "{}",
