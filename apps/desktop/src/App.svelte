@@ -6,7 +6,7 @@
   import Logo from '../../../shared/ui/Logo.svelte';
   import RequestModal from './components/RequestModal.svelte';
   import Toasts from './components/Toasts.svelte';
-  import { t } from './lib/i18n';
+  import { num, t } from './lib/i18n';
   import { ACCENTS, store, type View } from './lib/store.svelte';
   import Home from './views/Home.svelte';
   import Nearby from './views/Nearby.svelte';
@@ -76,9 +76,9 @@
         <button class:active={store.view === n.id} onclick={() => (store.view = n.id)}>
           <Icon name={n.icon} size={19} />
           <span>{t(n.label)}</span>
-          {#if n.id === 'transfers' && activeCount}<em>{activeCount}</em>{/if}
-          {#if n.id === 'phone' && store.onlinePhones.length}<em class="ok">{store.onlinePhones.length}</em>{/if}
-          {#if n.id === 'nearby' && store.peers.length}<em class="soft">{store.peers.length}</em>{/if}
+          {#if n.id === 'transfers' && activeCount}<em>{num(activeCount)}</em>{/if}
+          {#if n.id === 'phone' && store.onlinePhones.length}<em class="ok">{num(store.onlinePhones.length)}</em>{/if}
+          {#if n.id === 'nearby' && store.peers.length}<em class="soft">{num(store.peers.length)}</em>{/if}
         </button>
       {/each}
     </nav>

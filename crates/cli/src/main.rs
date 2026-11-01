@@ -75,7 +75,10 @@ enum Cmd {
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::try_from_env("TURBODROP_LOG").unwrap_or_else(|_| "warn".into()))
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_env("TURBODROP_LOG")
+                .unwrap_or_else(|_| "warn".into()),
+        )
         .with_writer(std::io::stderr)
         .init();
     if let Err(e) = run(Cli::parse()).await {
@@ -86,7 +89,10 @@ async fn main() {
 
 async fn start(cli: &Cli) -> anyhow::Result<Arc<Node>> {
     let data = turbodrop_core::default_data_dir().join("cli");
-    let downloads = cli.dir.clone().unwrap_or_else(turbodrop_core::default_download_dir);
+    let downloads = cli
+        .dir
+        .clone()
+        .unwrap_or_else(turbodrop_core::default_download_dir);
     let mut cfg = Config::new(data, downloads);
     if let Some(n) = &cli.name {
         cfg.settings.device_name = n.clone();
@@ -115,7 +121,10 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
                 println!("No Turbodrop devices found. Phones: run `turbodrop receive` and scan the QR code.");
             } else {
                 for p in peers {
-                    println!("{:<24} {:<8} {}:{}  {}", p.device.name, p.device.platform, p.address, p.device.port, p.verification);
+                    println!(
+                        "{:<24} {:<8} {}:{}  {}",
+                        p.device.name, p.device.platform, p.address, p.device.port, p.verification
+                    );
                 }
             }
             Ok(())
@@ -142,7 +151,12 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
             }
             event_loop(node, cli.json, false, Some((paths.clone(), text.clone()))).await
         }
-        Cmd::Send { paths, to, text, wait } => {
+        Cmd::Send {
+            paths,
+            to,
+            text,
+            wait,
+        } => {
             if paths.is_empty() && text.is_none() {
                 bail!("give files to send or --text");
             }
@@ -152,7 +166,10 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
             let mut rx = node.subscribe();
             if !cli.json {
                 if let Some(p) = node.peers().into_iter().find(|p| p.device.id == peer_id) {
-                    println!("Sending to {} — check the code matches on both screens: {}", p.device.name, p.verification);
+                    println!(
+                        "Sending to {} — check the code matches on both screens: {}",
+                        p.device.name, p.verification
+                    );
                 }
             }
             loop {
@@ -166,7 +183,9 @@ async fn run(cli: Cli) -> anyhow::Result<()> {
                             return match transfer.status {
                                 Status::Done => Ok(()),
                                 Status::Declined => Err(anyhow!("the other device declined")),
-                                _ => Err(anyhow!(transfer.error.unwrap_or_else(|| "transfer did not finish".into()))),
+                                _ => Err(anyhow!(transfer
+                                    .error
+                                    .unwrap_or_else(|| "transfer did not finish".into()))),
                             };
                         }
                     }
@@ -188,16 +207,29 @@ async fn find_peer(node: &Arc<Node>, to: &str, wait: u64) -> anyhow::Result<Stri
     let deadline = tokio::time::Instant::now() + Duration::from_secs(wait);
     loop {
         let peers = node.peers();
-        if let Some(p) = peers.iter().find(|p| p.device.id == to || p.device.name.to_lowercase() == needle) {
+        if let Some(p) = peers
+            .iter()
+            .find(|p| p.device.id == to || p.device.name.to_lowercase() == needle)
+        {
             return Ok(p.device.id.clone());
         }
-        let partial: Vec<_> = peers.iter().filter(|p| p.device.name.to_lowercase().contains(&needle)).collect();
+        let partial: Vec<_> = peers
+            .iter()
+            .filter(|p| p.device.name.to_lowercase().contains(&needle))
+            .collect();
         if partial.len() == 1 {
             return Ok(partial[0].device.id.clone());
         }
         if tokio::time::Instant::now() >= deadline {
             if partial.len() > 1 {
-                bail!("several devices match '{to}': {}", partial.iter().map(|p| p.device.name.as_str()).collect::<Vec<_>>().join(", "));
+                bail!(
+                    "several devices match '{to}': {}",
+                    partial
+                        .iter()
+                        .map(|p| p.device.name.as_str())
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                );
             }
             bail!("no device called '{to}' found (try its IP address)");
         }
@@ -208,7 +240,10 @@ async fn find_peer(node: &Arc<Node>, to: &str, wait: u64) -> anyhow::Result<Stri
 fn print_invite(node: &Node, json: bool) {
     let inv = node.invite();
     if json {
-        println!("{}", serde_json::json!({"type": "invite", "invite": inv, "device": node.info()}));
+        println!(
+            "{}",
+            serde_json::json!({"type": "invite", "invite": inv, "device": node.info()})
+        );
         return;
     }
     let info = node.info();
@@ -233,7 +268,12 @@ fn print_invite(node: &Node, json: bool) {
     }
 }
 
-async fn event_loop(node: Arc<Node>, json: bool, once: bool, share: Option<(Vec<PathBuf>, Option<String>)>) -> anyhow::Result<()> {
+async fn event_loop(
+    node: Arc<Node>,
+    json: bool,
+    once: bool,
+    share: Option<(Vec<PathBuf>, Option<String>)>,
+) -> anyhow::Result<()> {
     let mut rx = node.subscribe();
     let interactive = std::io::stdin().is_terminal() && !json;
     loop {
@@ -251,12 +291,17 @@ async fn event_loop(node: Arc<Node>, json: bool, once: bool, share: Option<(Vec<
                     println!("📱 {} connected", client.name);
                 }
                 if let Some((paths, text)) = &share {
-                    if let Err(e) = node.send_to_browser(Some(&client.id), paths, text.clone()).await {
+                    if let Err(e) = node
+                        .send_to_browser(Some(&client.id), paths, text.clone())
+                        .await
+                    {
                         eprintln!("could not offer files: {e:#}");
                     }
                 }
             }
-            Event::PeerUpdate { peer } if !json => println!("💻 found {} ({})", peer.device.name, peer.device.platform),
+            Event::PeerUpdate { peer } if !json => {
+                println!("💻 found {} ({})", peer.device.name, peer.device.platform)
+            }
             Event::IncomingRequest { transfer } => {
                 if !json {
                     println!(
@@ -290,7 +335,9 @@ async fn event_loop(node: Arc<Node>, json: bool, once: bool, share: Option<(Vec<
                     println!("Declined.");
                 }
             }
-            Event::TextReceived { from, text, .. } if !json => println!("\n💬 {}: {}", from.name, text),
+            Event::TextReceived { from, text, .. } if !json => {
+                println!("\n💬 {}: {}", from.name, text)
+            }
             Event::TransferUpdate { transfer } => {
                 if !json {
                     report(&transfer, false);
@@ -298,7 +345,10 @@ async fn event_loop(node: Arc<Node>, json: bool, once: bool, share: Option<(Vec<
                         println!();
                         if transfer.direction == Direction::In && transfer.status == Status::Done {
                             for f in &transfer.files {
-                                println!("   ✓ {}", f.local_path.clone().unwrap_or_else(|| f.path.clone()));
+                                println!(
+                                    "   ✓ {}",
+                                    f.local_path.clone().unwrap_or_else(|| f.path.clone())
+                                );
                             }
                         }
                     }
@@ -317,8 +367,16 @@ fn report(t: &TransferView, json: bool) {
         println!("{}", serde_json::json!({"type": "transfer", "transfer": t}));
         return;
     }
-    let arrow = if t.direction == Direction::In { "⬇" } else { "⬆" };
-    let pct = if t.total_bytes > 0 { t.done_bytes as f64 * 100.0 / t.total_bytes as f64 } else { 100.0 };
+    let arrow = if t.direction == Direction::In {
+        "⬇"
+    } else {
+        "⬆"
+    };
+    let pct = if t.total_bytes > 0 {
+        t.done_bytes as f64 * 100.0 / t.total_bytes as f64
+    } else {
+        100.0
+    };
     let status = match t.status {
         Status::Waiting => "waiting".to_string(),
         Status::Active => format!("{}/s", human(t.speed as u64)),

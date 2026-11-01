@@ -60,7 +60,10 @@ pub struct AppState {
 
 impl AppState {
     fn save(&self) {
-        let file = SettingsFile { core: Some(self.node.settings()), app: self.app.lock().unwrap().clone() };
+        let file = SettingsFile {
+            core: Some(self.node.settings()),
+            app: self.app.lock().unwrap().clone(),
+        };
         let path = self.node.data_dir.join("settings.json");
         if let Ok(b) = serde_json::to_vec_pretty(&file) {
             let _ = std::fs::write(path, b);
@@ -117,16 +120,27 @@ struct Target {
 }
 
 #[tauri::command]
-async fn send(state: State<'_, AppState>, target: Target, paths: Vec<String>, text: Option<String>) -> Res<Vec<String>> {
+async fn send(
+    state: State<'_, AppState>,
+    target: Target,
+    paths: Vec<String>,
+    text: Option<String>,
+) -> Res<Vec<String>> {
     let node = state.node.clone();
     let paths: Vec<PathBuf> = paths.into_iter().map(PathBuf::from).collect();
     let text = text.filter(|t| !t.trim().is_empty());
     match target.kind.as_str() {
         "device" => {
             let id = target.id.ok_or("missing device")?;
-            node.send_to_peer(&id, &paths, text).await.map(|t| vec![t]).map_err(e2s)
+            node.send_to_peer(&id, &paths, text)
+                .await
+                .map(|t| vec![t])
+                .map_err(e2s)
         }
-        "browser" => node.send_to_browser(target.id.as_deref(), &paths, text).await.map_err(e2s),
+        "browser" => node
+            .send_to_browser(target.id.as_deref(), &paths, text)
+            .await
+            .map_err(e2s),
         _ => node.send_to_browser(None, &paths, text).await.map_err(e2s),
     }
 }
@@ -169,7 +183,12 @@ fn clear_history(state: State<'_, AppState>) {
 }
 
 #[tauri::command]
-fn update_settings(app: AppHandle, state: State<'_, AppState>, settings: Settings, app_settings: AppSettings) -> Res<()> {
+fn update_settings(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    settings: Settings,
+    app_settings: AppSettings,
+) -> Res<()> {
     let mut s = settings;
     s.device_name = s.device_name.trim().chars().take(40).collect();
     if s.device_name.is_empty() {
@@ -182,7 +201,11 @@ fn update_settings(app: AppHandle, state: State<'_, AppState>, settings: Setting
     if old.autostart != app_settings.autostart {
         use tauri_plugin_autostart::ManagerExt;
         let al = app.autolaunch();
-        let r = if app_settings.autostart { al.enable() } else { al.disable() };
+        let r = if app_settings.autostart {
+            al.enable()
+        } else {
+            al.disable()
+        };
         r.map_err(e2s)?;
     }
     if old.context_menu != app_settings.context_menu {
@@ -199,7 +222,8 @@ fn update_settings(app: AppHandle, state: State<'_, AppState>, settings: Setting
 #[tauri::command]
 fn qr_svg(text: String) -> Res<String> {
     use qrcode::render::svg;
-    let code = qrcode::QrCode::with_error_correction_level(text.as_bytes(), qrcode::EcLevel::M).map_err(e2s)?;
+    let code = qrcode::QrCode::with_error_correction_level(text.as_bytes(), qrcode::EcLevel::M)
+        .map_err(e2s)?;
     Ok(code
         .render::<svg::Color>()
         .min_dimensions(256, 256)
@@ -221,7 +245,11 @@ fn path_kinds(paths: Vec<String>) -> Vec<(String, bool, u64)> {
         .into_iter()
         .filter_map(|p| {
             let md = std::fs::metadata(&p).ok()?;
-            let size = if md.is_dir() { dir_size(std::path::Path::new(&p), 0) } else { md.len() };
+            let size = if md.is_dir() {
+                dir_size(std::path::Path::new(&p), 0)
+            } else {
+                md.len()
+            };
             Some((p, md.is_dir(), size))
         })
         .collect()
@@ -279,7 +307,11 @@ fn quit(app: AppHandle, state: State<'_, AppState>) {
 
 /// Files handed to us on the command line (Explorer "Send with Turbodrop", drag onto the exe).
 fn file_args(args: &[String]) -> Vec<String> {
-    args.iter().skip(1).filter(|a| !a.starts_with("--") && std::path::Path::new(a).exists()).cloned().collect()
+    args.iter()
+        .skip(1)
+        .filter(|a| !a.starts_with("--") && std::path::Path::new(a).exists())
+        .cloned()
+        .collect()
 }
 
 fn notify(app: &AppHandle, title: &str, body: &str) {
@@ -324,14 +356,30 @@ fn spawn_event_pump(app: AppHandle, node: Arc<Node>) {
                         && prefs.notifications
                         && !window_visible(&app)
                     {
-                        notify(&app, "Turbodrop", &format!("Received {} file(s) from {}", transfer.files.len(), transfer.peer_name));
+                        notify(
+                            &app,
+                            "Turbodrop",
+                            &format!(
+                                "Received {} file(s) from {}",
+                                transfer.files.len(),
+                                transfer.peer_name
+                            ),
+                        );
                     }
                 }
                 Event::IncomingRequest { transfer } => {
                     show_window(app.clone());
                     if prefs.notifications {
-                        let what = if transfer.files.is_empty() { "a message".to_string() } else { format!("{} file(s)", transfer.files.len()) };
-                        notify(&app, "Turbodrop", &format!("{} wants to send you {what}", transfer.peer_name));
+                        let what = if transfer.files.is_empty() {
+                            "a message".to_string()
+                        } else {
+                            format!("{} file(s)", transfer.files.len())
+                        };
+                        notify(
+                            &app,
+                            "Turbodrop",
+                            &format!("{} wants to send you {what}", transfer.peer_name),
+                        );
                     }
                 }
                 Event::TextReceived { from, text, .. } => {
@@ -340,7 +388,9 @@ fn spawn_event_pump(app: AppHandle, node: Arc<Node>) {
                         notify(&app, &format!("Message from {}", from.name), &preview);
                     }
                 }
-                Event::BrowserUpdate { client } if client.online && prefs.notifications && !window_visible(&app) => {
+                Event::BrowserUpdate { client }
+                    if client.online && prefs.notifications && !window_visible(&app) =>
+                {
                     let _ = PeerKind::Browser;
                     notify(&app, "Turbodrop", &format!("{} connected", client.name));
                 }
@@ -362,13 +412,20 @@ fn build_tray(app: &AppHandle) -> tauri::Result<()> {
         .on_menu_event(|app, e| match e.id.as_ref() {
             "open" => show_window(app.clone()),
             "quit" => {
-                app.state::<AppState>().quitting.store(true, Ordering::SeqCst);
+                app.state::<AppState>()
+                    .quitting
+                    .store(true, Ordering::SeqCst);
                 app.exit(0);
             }
             _ => {}
         })
         .on_tray_icon_event(|tray, e| {
-            if let TrayIconEvent::Click { button: MouseButton::Left, button_state: MouseButtonState::Up, .. } = e {
+            if let TrayIconEvent::Click {
+                button: MouseButton::Left,
+                button_state: MouseButtonState::Up,
+                ..
+            } = e
+            {
                 show_window(tray.app_handle().clone());
             }
         })
@@ -378,14 +435,21 @@ fn build_tray(app: &AppHandle) -> tauri::Result<()> {
 
 pub fn run() {
     tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::try_from_env("TURBODROP_LOG").unwrap_or_else(|_| "info".into()))
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_env("TURBODROP_LOG")
+                .unwrap_or_else(|_| "info".into()),
+        )
         .init();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             let files = file_args(&args);
             if !files.is_empty() {
-                app.state::<AppState>().pending_files.lock().unwrap().extend(files.clone());
+                app.state::<AppState>()
+                    .pending_files
+                    .lock()
+                    .unwrap()
+                    .extend(files.clone());
                 let _ = app.emit("open-files", files);
             }
             show_window(app.clone());
@@ -394,9 +458,14 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_clipboard_manager::init())
-        .plugin(tauri_plugin_autostart::init(tauri_plugin_autostart::MacosLauncher::LaunchAgent, Some(vec!["--minimized"])))
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            Some(vec!["--minimized"]),
+        ))
         .setup(|app| {
-            let data_dir = std::env::var("TURBODROP_DATA_DIR").map(PathBuf::from).unwrap_or_else(|_| turbodrop_core::default_data_dir());
+            let data_dir = std::env::var("TURBODROP_DATA_DIR")
+                .map(PathBuf::from)
+                .unwrap_or_else(|_| turbodrop_core::default_data_dir());
             std::fs::create_dir_all(&data_dir)?;
             let saved: SettingsFile = std::fs::read(data_dir.join("settings.json"))
                 .ok()

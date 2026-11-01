@@ -16,6 +16,11 @@ pub mod sender;
 pub mod server;
 pub mod transfer;
 
-pub use events::{BrowserClient, Direction, Event, FileStatus, FileView, Peer, PeerKind, Status, TransferView};
-pub use node::{default_data_dir, default_download_dir, Config, Invite, InviteUrl, Node, Settings, TrustedDevice};
+pub use events::{
+    BrowserClient, Direction, Event, FileStatus, FileView, Peer, PeerKind, Status, TransferView,
+};
+pub use node::{
+    default_data_dir, default_download_dir, Config, Invite, InviteUrl, Node, Settings,
+    TrustedDevice,
+};
 pub use protocol::{DeviceInfo, DEFAULT_PORT, VERSION};

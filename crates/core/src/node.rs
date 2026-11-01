@@ -83,11 +83,16 @@ pub fn default_device_name() -> String {
 
 /// Default folder for received files: ~/Downloads/Turbodrop.
 pub fn default_download_dir() -> PathBuf {
-    dirs::download_dir().or_else(dirs::home_dir).unwrap_or_else(|| PathBuf::from(".")).join("Turbodrop")
+    dirs::download_dir()
+        .or_else(dirs::home_dir)
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join("Turbodrop")
 }
 
 pub fn default_data_dir() -> PathBuf {
-    dirs::data_dir().unwrap_or_else(|| PathBuf::from(".")).join("Turbodrop")
+    dirs::data_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join("Turbodrop")
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -114,7 +119,12 @@ pub struct Room {
 
 impl Room {
     fn from_key(sid: String, root: Key) -> Self {
-        Room { data: root.derive(crypto::LABEL_DATA), token: crypto::auth_token(&root), sid, root }
+        Room {
+            data: root.derive(crypto::LABEL_DATA),
+            token: crypto::auth_token(&root),
+            sid,
+            root,
+        }
     }
 }
 
@@ -179,14 +189,24 @@ impl Node {
             .with_context(|| format!("create {}", config.data_dir.display()))?;
         let (device_id, identity) = load_identity(&config.data_dir)?;
         let room = load_room(&config.data_dir)?;
-        let trusted: HashMap<String, TrustedDevice> = read_json(&config.data_dir.join("trusted.json")).unwrap_or_default();
-        let history: Vec<TransferView> = read_json(&config.data_dir.join("history.json")).unwrap_or_default();
-        let known: Vec<BrowserClient> = read_json(&config.data_dir.join("browsers.json")).unwrap_or_default();
+        let trusted: HashMap<String, TrustedDevice> =
+            read_json(&config.data_dir.join("trusted.json")).unwrap_or_default();
+        let history: Vec<TransferView> =
+            read_json(&config.data_dir.join("history.json")).unwrap_or_default();
+        let known: Vec<BrowserClient> =
+            read_json(&config.data_dir.join("browsers.json")).unwrap_or_default();
         let clients = known
             .into_iter()
             .map(|mut c| {
                 c.online = false;
-                (c.id.clone(), ClientConn { info: c, tx: None, conn: 0 })
+                (
+                    c.id.clone(),
+                    ClientConn {
+                        info: c,
+                        tx: None,
+                        conn: 0,
+                    },
+                )
             })
             .collect();
         let (events, _) = broadcast::channel(1024);
@@ -219,7 +239,12 @@ impl Node {
         node.port.store(port, Ordering::SeqCst);
         let app = crate::server::router(node.clone());
         tokio::spawn(async move {
-            if let Err(e) = axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>()).await {
+            if let Err(e) = axum::serve(
+                listener,
+                app.into_make_service_with_connect_info::<SocketAddr>(),
+            )
+            .await
+            {
                 tracing::error!("http server stopped: {e}");
             }
         });
@@ -275,7 +300,12 @@ impl Node {
 
     pub fn peers(&self) -> Vec<Peer> {
         let mut v: Vec<Peer> = self.peers.lock().unwrap().values().cloned().collect();
-        v.sort_by(|a, b| a.device.name.to_lowercase().cmp(&b.device.name.to_lowercase()));
+        v.sort_by(|a, b| {
+            a.device
+                .name
+                .to_lowercase()
+                .cmp(&b.device.name.to_lowercase())
+        });
         v
     }
 
@@ -306,7 +336,9 @@ impl Node {
             let mut peers = self.peers.lock().unwrap();
             let changed = match peers.get(&peer.device.id) {
                 Some(old) => {
-                    old.device != peer.device || old.address != peer.address || old.trusted != peer.trusted
+                    old.device != peer.device
+                        || old.address != peer.address
+                        || old.trusted != peer.trusted
                 }
                 None => true,
             };
@@ -327,8 +359,15 @@ impl Node {
 
     /// Add a device by address (`192.168.1.20` or `192.168.1.20:47474`), e.g. when multicast is blocked.
     pub async fn add_peer(&self, address: &str) -> anyhow::Result<Peer> {
-        let addr = address.trim().trim_start_matches("http://").trim_end_matches('/');
-        let with_port = if addr.contains(':') { addr.to_string() } else { format!("{addr}:{}", crate::protocol::DEFAULT_PORT) };
+        let addr = address
+            .trim()
+            .trim_start_matches("http://")
+            .trim_end_matches('/');
+        let with_port = if addr.contains(':') {
+            addr.to_string()
+        } else {
+            format!("{addr}:{}", crate::protocol::DEFAULT_PORT)
+        };
         let url = format!("http://{with_port}/api/v1/info");
         let info: DeviceInfo = self
             .http
@@ -344,7 +383,10 @@ impl Node {
         if info.id == self.device_id {
             bail!("that is this device");
         }
-        let host = with_port.rsplit_once(':').map(|(h, _)| h.to_string()).unwrap_or(with_port.clone());
+        let host = with_port
+            .rsplit_once(':')
+            .map(|(h, _)| h.to_string())
+            .unwrap_or(with_port.clone());
         Ok(self.upsert_peer(info, host, "manual"))
     }
 
@@ -356,7 +398,11 @@ impl Node {
                 let p = peer.clone().ok_or_else(|| anyhow!("unknown device"))?;
                 t.insert(
                     device_id.to_string(),
-                    TrustedDevice { id: device_id.into(), name: p.device.name.clone(), public_key: p.device.public_key.clone() },
+                    TrustedDevice {
+                        id: device_id.into(),
+                        name: p.device.name.clone(),
+                        public_key: p.device.public_key.clone(),
+                    },
                 );
             } else {
                 t.remove(device_id);
@@ -371,7 +417,14 @@ impl Node {
 
     pub(crate) fn trust_sender(&self, id: &str, name: &str, public_key: &str) {
         let mut t = self.trusted.lock().unwrap();
-        t.insert(id.to_string(), TrustedDevice { id: id.into(), name: name.into(), public_key: public_key.into() });
+        t.insert(
+            id.to_string(),
+            TrustedDevice {
+                id: id.into(),
+                name: name.into(),
+                public_key: public_key.into(),
+            },
+        );
         write_json(&self.data_dir.join("trusted.json"), &*t);
     }
 
@@ -407,7 +460,10 @@ impl Node {
         let room = Room::from_key(crypto::random_id(9), Key::random());
         write_json(
             &self.data_dir.join("room.json"),
-            &RoomFile { sid: room.sid.clone(), key: room.root.to_b64() },
+            &RoomFile {
+                sid: room.sid.clone(),
+                key: room.root.to_b64(),
+            },
         );
         *self.room.lock().unwrap() = room;
         let mut clients = self.clients.lock().unwrap();
@@ -422,7 +478,13 @@ impl Node {
     }
 
     pub fn clients(&self) -> Vec<BrowserClient> {
-        let mut v: Vec<BrowserClient> = self.clients.lock().unwrap().values().map(|c| c.info.clone()).collect();
+        let mut v: Vec<BrowserClient> = self
+            .clients
+            .lock()
+            .unwrap()
+            .values()
+            .map(|c| c.info.clone())
+            .collect();
         v.sort_by(|a, b| b.online.cmp(&a.online).then(b.last_seen.cmp(&a.last_seen)));
         v
     }
@@ -433,7 +495,13 @@ impl Node {
     }
 
     pub(crate) fn save_clients(&self) {
-        let list: Vec<BrowserClient> = self.clients.lock().unwrap().values().map(|c| c.info.clone()).collect();
+        let list: Vec<BrowserClient> = self
+            .clients
+            .lock()
+            .unwrap()
+            .values()
+            .map(|c| c.info.clone())
+            .collect();
         write_json(&self.data_dir.join("browsers.json"), &list);
     }
 
@@ -472,7 +540,7 @@ impl Node {
             .map(|t| t.view())
             .filter(|v| !v.status.is_final())
             .collect();
-        active.sort_by(|a, b| b.started_at.cmp(&a.started_at));
+        active.sort_by_key(|t| std::cmp::Reverse(t.started_at));
         let history = self.history.lock().unwrap();
         active.extend(history.iter().cloned());
         active
@@ -492,7 +560,9 @@ impl Node {
     /// map a little later (late retries still find it meanwhile).
     pub(crate) fn finish(self: &Arc<Self>, t: &Arc<Transfer>) {
         let view = t.view();
-        self.emit(Event::TransferUpdate { transfer: view.clone() });
+        self.emit(Event::TransferUpdate {
+            transfer: view.clone(),
+        });
         {
             let mut h = self.history.lock().unwrap();
             h.retain(|x| x.id != view.id);
@@ -510,8 +580,15 @@ impl Node {
 
     /// Accept or decline an incoming request. `trust` remembers the sending device.
     pub fn respond(&self, transfer_id: &str, accept: bool, trust: bool) -> anyhow::Result<()> {
-        let t = self.transfer(transfer_id).ok_or_else(|| anyhow!("unknown transfer"))?;
-        let tx = t.decision.lock().unwrap().take().ok_or_else(|| anyhow!("transfer is not waiting"))?;
+        let t = self
+            .transfer(transfer_id)
+            .ok_or_else(|| anyhow!("unknown transfer"))?;
+        let tx = t
+            .decision
+            .lock()
+            .unwrap()
+            .take()
+            .ok_or_else(|| anyhow!("transfer is not waiting"))?;
         if accept && trust && t.kind == PeerKind::Device {
             if let Some(pk) = self.pending_sender_key(&t) {
                 self.trust_sender(&t.peer_id, &t.peer_name, &pk);
@@ -520,7 +597,11 @@ impl Node {
                 }
             }
         }
-        let _ = tx.send(if accept { Decision::Accept } else { Decision::Decline });
+        let _ = tx.send(if accept {
+            Decision::Accept
+        } else {
+            Decision::Decline
+        });
         Ok(())
     }
 
@@ -530,13 +611,18 @@ impl Node {
 
     /// Cancel any transfer, either direction.
     pub fn cancel(self: &Arc<Self>, transfer_id: &str) -> anyhow::Result<()> {
-        let t = self.transfer(transfer_id).ok_or_else(|| anyhow!("unknown transfer"))?;
+        let t = self
+            .transfer(transfer_id)
+            .ok_or_else(|| anyhow!("unknown transfer"))?;
         if t.cancel() {
             if t.direction == crate::events::Direction::In {
                 self.inbox.discard_unstarted(&t);
             }
             if t.kind == PeerKind::Browser && t.direction == crate::events::Direction::Out {
-                self.push_to_client(&t.peer_id, &serde_json::json!({"type": "cancel", "transferId": t.id}));
+                self.push_to_client(
+                    &t.peer_id,
+                    &serde_json::json!({"type": "cancel", "transferId": t.id}),
+                );
             }
             self.finish(&t);
         }
@@ -550,7 +636,13 @@ impl Node {
         paths: &[PathBuf],
         text: Option<String>,
     ) -> anyhow::Result<String> {
-        let peer = self.peers.lock().unwrap().get(peer_id).cloned().ok_or_else(|| anyhow!("unknown device"))?;
+        let peer = self
+            .peers
+            .lock()
+            .unwrap()
+            .get(peer_id)
+            .cloned()
+            .ok_or_else(|| anyhow!("unknown device"))?;
         crate::sender::send_to_peer(self.clone(), peer, paths, text).await
     }
 
@@ -566,7 +658,10 @@ impl Node {
     }
 
     pub(crate) fn remember_sender_key(&self, transfer_id: &str, public_key: &str) {
-        self.pending_keys.lock().unwrap().insert(transfer_id.to_string(), public_key.to_string());
+        self.pending_keys
+            .lock()
+            .unwrap()
+            .insert(transfer_id.to_string(), public_key.to_string());
     }
 
     pub(crate) fn offers_for_client(&self, client_id: &str) -> Vec<Offer> {
@@ -585,7 +680,10 @@ impl Node {
             .collect()
     }
 
-    pub(crate) fn wait_decision_slot(&self, t: &Transfer) -> tokio::sync::oneshot::Receiver<Decision> {
+    pub(crate) fn wait_decision_slot(
+        &self,
+        t: &Transfer,
+    ) -> tokio::sync::oneshot::Receiver<Decision> {
         let (tx, rx) = tokio::sync::oneshot::channel();
         *t.decision.lock().unwrap() = Some(tx);
         rx
@@ -630,15 +728,33 @@ pub fn lan_addresses() -> Vec<(String, IpAddr)> {
                 let name = i.name.clone();
                 let lname = name.to_lowercase();
                 // Virtual adapters (WSL, Hyper-V, Docker, VirtualBox, VMware) are unreachable from a phone.
-                let virt = ["vethernet", "wsl", "hyper-v", "docker", "virtualbox", "vmware", "vbox", "loopback", "br-", "veth"]
-                    .iter()
-                    .any(|k| lname.contains(k));
+                let virt = [
+                    "vethernet",
+                    "wsl",
+                    "hyper-v",
+                    "docker",
+                    "virtualbox",
+                    "vmware",
+                    "vbox",
+                    "loopback",
+                    "br-",
+                    "veth",
+                ]
+                .iter()
+                .any(|k| lname.contains(k));
                 if virt {
                     return None;
                 }
-                let rank = if lname.contains("wi-fi") || lname.contains("wlan") || lname.contains("wireless") || lname.starts_with("wl") {
+                let rank = if lname.contains("wi-fi")
+                    || lname.contains("wlan")
+                    || lname.contains("wireless")
+                    || lname.starts_with("wl")
+                {
                     0
-                } else if lname.contains("ethernet") || lname.starts_with("en") || lname.starts_with("eth") {
+                } else if lname.contains("ethernet")
+                    || lname.starts_with("en")
+                    || lname.starts_with("eth")
+                {
                     1
                 } else if is_cgnat(&ip) {
                     3
@@ -685,7 +801,13 @@ fn load_identity(dir: &Path) -> anyhow::Result<(String, Identity)> {
     }
     let identity = Identity::generate();
     let id = crypto::random_id(12);
-    write_json(&path, &IdentityFile { id: id.clone(), secret: identity.secret_b64() });
+    write_json(
+        &path,
+        &IdentityFile {
+            id: id.clone(),
+            secret: identity.secret_b64(),
+        },
+    );
     Ok((id, identity))
 }
 
@@ -697,12 +819,20 @@ fn load_room(dir: &Path) -> anyhow::Result<Room> {
         }
     }
     let room = Room::from_key(crypto::random_id(9), Key::random());
-    write_json(&path, &RoomFile { sid: room.sid.clone(), key: room.root.to_b64() });
+    write_json(
+        &path,
+        &RoomFile {
+            sid: room.sid.clone(),
+            key: room.root.to_b64(),
+        },
+    );
     Ok(room)
 }
 
 pub(crate) fn read_json<T: serde::de::DeserializeOwned>(path: &Path) -> Option<T> {
-    std::fs::read(path).ok().and_then(|b| serde_json::from_slice(&b).ok())
+    std::fs::read(path)
+        .ok()
+        .and_then(|b| serde_json::from_slice(&b).ok())
 }
 
 pub(crate) fn write_json<T: Serialize + ?Sized>(path: &Path, value: &T) {

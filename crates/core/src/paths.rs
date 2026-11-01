@@ -7,8 +7,8 @@
 use std::path::{Path, PathBuf};
 
 const RESERVED: [&str; 22] = [
-    "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+    "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8",
+    "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
 ];
 
 /// Make one path component safe on every OS. Never returns an empty string, `.` or `..`.
@@ -27,7 +27,11 @@ pub fn sanitize_component(raw: &str) -> String {
         s.pop();
     }
     let s = s.trim_start().to_string();
-    let mut s = if s.is_empty() || s == "." || s == ".." { "file".to_string() } else { s };
+    let mut s = if s.is_empty() || s == "." || s == ".." {
+        "file".to_string()
+    } else {
+        s
+    };
     let stem = s.split('.').next().unwrap_or("").to_ascii_uppercase();
     if RESERVED.contains(&stem.as_str()) {
         s = format!("_{s}");
@@ -111,8 +115,14 @@ mod tests {
     fn traversal_is_neutralised() {
         assert_eq!(sanitize_relative("../../etc/passwd"), vec!["etc", "passwd"]);
         assert_eq!(sanitize_relative("/abs/x"), vec!["abs", "x"]);
-        assert_eq!(sanitize_relative("C:\\Windows\\system32"), vec!["C_", "Windows", "system32"]);
-        assert_eq!(sanitize_relative("\\\\server\\share\\f"), vec!["server", "share", "f"]);
+        assert_eq!(
+            sanitize_relative("C:\\Windows\\system32"),
+            vec!["C_", "Windows", "system32"]
+        );
+        assert_eq!(
+            sanitize_relative("\\\\server\\share\\f"),
+            vec!["server", "share", "f"]
+        );
         assert_eq!(sanitize_relative(""), vec!["file"]);
         assert_eq!(sanitize_relative("./././"), vec!["file"]);
         let base = Path::new("base");
