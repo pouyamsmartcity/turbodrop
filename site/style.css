@@ -510,3 +510,41 @@ footer {
   padding: 0 16px;
   font-size: 14px;
 }
+
+.maker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.maker:hover {
+  color: #c9b27c;
+}
+.maker .pm {
+  color: #c9b27c;
+  flex: none;
+}
+footer .pouyam {
+  margin: 0 auto 14px;
+  max-width: 560px;
+}
+footer .pouyam .maker {
+  font-size: 14px;
+  line-height: 1.6;
+  align-items: flex-start;
+  text-align: start;
+}
+footer .pouyam .pm {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+@media (max-width: 900px) {
+  .top .maker span {
+    display: none;
+  }
+}

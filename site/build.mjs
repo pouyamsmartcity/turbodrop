@@ -9,6 +9,8 @@ const OUT = join(HERE, 'dist');
 const SITE = 'https://pouyamsmartcity.github.io/turbodrop';
 const REPO = 'https://github.com/pouyamsmartcity/turbodrop';
 const REL = `${REPO}/releases/latest`;
+const MARK = '<svg class="pm" width="15" height="15" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.9" stroke-linecap="round" aria-hidden="true"><path d="M10 13v16"/><circle cx="18" cy="13" r="8"/><circle cx="26.2" cy="5.2" r="2.2" fill="currentColor" stroke="none"/></svg>';
+const MAKER = (label, medium) => `<a class="maker" href="https://www.pouyam.com/?utm_source=turbodrop&amp;utm_medium=${medium}">${MARK}<span>${label}</span></a>`;
 
 const T = {
   en: {
@@ -64,8 +66,10 @@ const T = {
       ['Android to iPhone?', 'Yes — connect both phones to Turbodrop on a computer and send through it, or send between phone and computer directly.'],
     ],
     ctaTitle: 'Every device. One drop.',
-    footer: 'Made with ❤️ by <a href="https://www.pouyam.com">Pouyam</a>. AirDrop is a trademark of Apple Inc.; Turbodrop is independent and not affiliated with Apple.',
+    footer: 'AirDrop is a trademark of Apple Inc.; Turbodrop is independent and not affiliated with Apple.',
     langLink: ['fa/', 'فارسی'],
+    by: 'by Pouyam',
+    aboutPouyam: 'Turbodrop is made by Pouyam, the team behind pouyam.com — a social world of games, news and creators.',
   },
   fa: {
     dir: 'rtl',
@@ -120,8 +124,10 @@ const T = {
       ['از اندروید به آیفون هم می‌شود؟', 'بله. هر دو گوشی را به توربودراپ روی کامپیوتر وصل کنید و از طریق کامپیوتر بفرستید.'],
     ],
     ctaTitle: 'هر دستگاهی را ایردراپی کنید.',
-    footer: 'ساخته‌شده با ❤️ توسط <a href="https://www.pouyam.com">پویام</a>. AirDrop علامت تجاری Apple Inc. است؛ توربودراپ پروژه‌ای مستقل است و ارتباطی با اپل ندارد.',
+    footer: 'AirDrop علامت تجاری Apple Inc. است؛ توربودراپ پروژه‌ای مستقل است و ارتباطی با اپل ندارد.',
     langLink: ['../', 'English'],
+    by: 'ساخت پویام',
+    aboutPouyam: 'توربودراپ را تیم پویام ساخته؛ همان تیمِ pouyam.com، دنیایی از بازی، خبر و شبکهٔ اجتماعی.',
   },
 };
 
@@ -189,7 +195,7 @@ function page(lang) {
 <header class="top">
   <a class="brand" href="${base || './'}"><img src="${base}favicon.svg" width="30" height="30" alt="" />Turbodrop</a>
   <nav><a href="#features">${t.nav[0]}</a><a href="#how">${t.nav[1]}</a><a href="#compare">${t.nav[2]}</a><a href="#faq">${t.nav[3]}</a></nav>
-  <div class="right"><a class="lang" href="${t.langLink[0]}" hreflang="${lang === 'en' ? 'fa' : 'en'}">${t.langLink[1]}</a><a class="ghbtn" href="${REPO}" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg></a></div>
+  <div class="right">${MAKER(t.by, 'website-header')}<a class="lang" href="${t.langLink[0]}" hreflang="${lang === 'en' ? 'fa' : 'en'}">${t.langLink[1]}</a><a class="ghbtn" href="${REPO}" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg></a></div>
 </header>
 
 <main>
@@ -254,7 +260,7 @@ function page(lang) {
 </section>
 </main>
 
-<footer><p>${t.footer}</p><p class="tiny">© 2026 Pouyam · MIT · <a href="${REPO}">GitHub</a> · <a href="${base}download/">Download</a> · <a href="${base}privacy/">Privacy</a> · <a href="${base}llms.txt">llms.txt</a></p></footer>
+<footer><p class="pouyam">${MAKER(t.aboutPouyam, 'website-footer')}</p><p>${t.footer}</p><p class="tiny">© 2026 Pouyam · MIT · <a href="${REPO}">GitHub</a> · <a href="${base}download/">Download</a> · <a href="${base}privacy/">Privacy</a> · <a href="${base}llms.txt">llms.txt</a></p></footer>
 </body>
 </html>`;
 }

@@ -5,6 +5,7 @@
   import { onMount } from 'svelte';
   import Icon, { type IconName } from '../../../shared/ui/Icon.svelte';
   import Logo from '../../../shared/ui/Logo.svelte';
+  import PouyamMark from '../../../shared/ui/PouyamMark.svelte';
   import RequestModal from './components/RequestModal.svelte';
   import Toasts from './components/Toasts.svelte';
   import { num, t } from './lib/i18n';
@@ -107,8 +108,8 @@
         <span class="tiny ltr">{store.invite[0]?.ip ?? ''}{store.info ? `:${store.info.port}` : ''}</span>
       </div>
     </div>
-    <button class="by" onclick={() => store.openUrl('https://www.pouyam.com')}>
-      {t('app.by')} · pouyam.com
+    <button class="by" title="pouyam.com" onclick={() => store.openUrl('https://www.pouyam.com/?utm_source=turbodrop&utm_medium=app')}>
+      <PouyamMark size={14} /><span>{t('app.by')}</span>
     </button>
   </aside>
 
@@ -277,14 +278,19 @@
     }
   }
   .by {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
     background: none;
     border: 0;
     color: var(--text-3);
     font-size: 12px;
-    padding: 2px;
+    padding: 4px;
+    transition: color 0.25s;
   }
   .by:hover {
-    color: var(--text);
+    color: #c9b27c;
   }
   main {
     display: flex;

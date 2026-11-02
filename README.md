@@ -165,10 +165,12 @@ Windows builds are being set up for free code signing provided by [SignPath.io](
 
 ## License
 
-[MIT](LICENSE) © 2026 [Pouyam](https://www.pouyam.com).
+[MIT](LICENSE) © 2026 [Pouyam](https://www.pouyam.com/?utm_source=turbodrop&utm_medium=github).
 
 <div align="center">
-<sub>Made with ❤️ by <a href="https://www.pouyam.com">Pouyam</a> · built with Rust, Tauri and Svelte</sub>
+<a href="https://www.pouyam.com/?utm_source=turbodrop&utm_medium=github"><img src="docs/pouyam-mark.svg" width="28" alt="Pouyam" /></a>
+<br/>
+<sub>Made by <a href="https://www.pouyam.com/?utm_source=turbodrop&utm_medium=github">Pouyam</a> — the team behind pouyam.com, a social world of games, news and creators · built with Rust, Tauri and Svelte</sub>
 <br/>
 <sub>AirDrop is a trademark of Apple Inc. Turbodrop is an independent project, not affiliated with Apple.</sub>
 </div>

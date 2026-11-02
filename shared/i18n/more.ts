@@ -7,6 +7,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'انقل الملفات بين هاتفك وحاسوبك',
     'app.by': 'من تطوير Pouyam',
+    'brand.about': 'طوّر فريق Pouyam تطبيق Turbodrop، وهو الفريق الذي يقف وراء pouyam.com: عالم اجتماعي من الألعاب والأخبار وصنّاع المحتوى.',
+    'brand.visit': 'زُر Pouyam',
 
     'conn.connecting': 'جارٍ الاتصال…',
     'conn.connected': 'متصل بـ {name}',
@@ -172,6 +174,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'Telefon ile bilgisayar arasında dosya gönderin',
     'app.by': 'Pouyam tarafından',
+    'brand.about': 'Turbodrop, pouyam.com’un arkasındaki ekip olan Pouyam tarafından geliştirildi: oyunlar, haberler ve içerik üreticileriyle dolu sosyal bir dünya.',
+    'brand.visit': 'Pouyam’ı ziyaret et',
 
     'conn.connecting': 'Bağlanıyor…',
     'conn.connected': '{name} cihazına bağlandı',
@@ -337,6 +341,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'Envía archivos entre tu teléfono y tu computadora',
     'app.by': 'de Pouyam',
+    'brand.about': 'Turbodrop lo hace Pouyam, el equipo detrás de pouyam.com: un mundo social de juegos, noticias y creadores.',
+    'brand.visit': 'Visitar Pouyam',
 
     'conn.connecting': 'Conectando…',
     'conn.connected': 'Conectado a {name}',
@@ -502,6 +508,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'Envoyez des fichiers entre votre téléphone et votre ordinateur',
     'app.by': 'par Pouyam',
+    'brand.about': 'Turbodrop est créé par Pouyam, l’équipe derrière pouyam.com : un univers social de jeux, d’actualités et de créateurs.',
+    'brand.visit': 'Découvrir Pouyam',
 
     'conn.connecting': 'Connexion…',
     'conn.connected': 'Connecté à {name}',
@@ -667,6 +675,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'Dateien zwischen Handy und Computer senden',
     'app.by': 'von Pouyam',
+    'brand.about': 'Turbodrop wird von Pouyam entwickelt, dem Team hinter pouyam.com – einer sozialen Welt aus Spielen, News und Creators.',
+    'brand.visit': 'Pouyam besuchen',
 
     'conn.connecting': 'Verbinden…',
     'conn.connected': 'Verbunden mit {name}',
@@ -832,6 +842,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'Envie arquivos entre o celular e o computador',
     'app.by': 'por Pouyam',
+    'brand.about': 'O Turbodrop é feito pela Pouyam, a equipe por trás do pouyam.com: um mundo social de jogos, notícias e criadores.',
+    'brand.visit': 'Conhecer a Pouyam',
 
     'conn.connecting': 'Conectando…',
     'conn.connected': 'Conectado a {name}',
@@ -997,6 +1009,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'Передача файлов между телефоном и компьютером',
     'app.by': 'от Pouyam',
+    'brand.about': 'Turbodrop создаёт Pouyam — команда pouyam.com, социального мира игр, новостей и авторов.',
+    'brand.visit': 'Перейти на Pouyam',
 
     'conn.connecting': 'Подключение…',
     'conn.connected': 'Подключено к {name}',
@@ -1162,6 +1176,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'फ़ोन और कंप्यूटर के बीच फ़ाइलें भेजें',
     'app.by': 'Pouyam द्वारा',
+    'brand.about': 'Turbodrop को Pouyam ने बनाया है — pouyam.com के पीछे की टीम, गेम, ख़बरों और क्रिएटर्स की एक सोशल दुनिया।',
+    'brand.visit': 'Pouyam देखें',
 
     'conn.connecting': 'कनेक्ट हो रहा है…',
     'conn.connected': '{name} से कनेक्टेड',
@@ -1327,6 +1343,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': '在手机和电脑之间互传文件',
     'app.by': 'Pouyam 出品',
+    'brand.about': 'Turbodrop 由 Pouyam 打造——pouyam.com 背后的团队，一个汇聚游戏、新闻与创作者的社交世界。',
+    'brand.visit': '访问 Pouyam',
 
     'conn.connecting': '正在连接…',
     'conn.connected': '已连接到 {name}',
@@ -1492,6 +1510,8 @@ export const more: Record<string, Dict> = {
     'app.name': 'Turbodrop',
     'app.tagline': 'スマホとパソコンの間でファイルを送る',
     'app.by': 'Pouyam が開発',
+    'brand.about': 'Turbodrop は pouyam.com を運営する Pouyam チームが開発しています。ゲーム、ニュース、クリエイターが集まるソーシャルな世界です。',
+    'brand.visit': 'Pouyam を見る',
 
     'conn.connecting': '接続中…',
     'conn.connected': '{name} に接続しました',

@@ -3,6 +3,7 @@
   import { LANGUAGES, type Lang } from '../../shared/i18n';
   import Icon from '../../shared/ui/Icon.svelte';
   import Logo from '../../shared/ui/Logo.svelte';
+  import PouyamMark from '../../shared/ui/PouyamMark.svelte';
   import ConnectScreen from './components/ConnectScreen.svelte';
   import IncomingCard from './components/IncomingCard.svelte';
   import OutgoingCard from './components/OutgoingCard.svelte';
@@ -172,7 +173,8 @@
           <button class="link" onclick={() => ((nameDraft = app.name), (editingName = true))}>{app.name}</button>
         {/if}
       </div>
-      <div class="tiny secure"><Icon name="shield" size={14} /> {t('footer.secure')} · <a href="https://www.pouyam.com" target="_blank" rel="noopener">{t('app.by')}</a></div>
+      <div class="tiny secure"><Icon name="shield" size={14} /> {t('footer.secure')}</div>
+      <a class="maker" href="https://www.pouyam.com/?utm_source=turbodrop&utm_medium=phone" target="_blank" rel="noopener"><PouyamMark size={14} /><span>{t('app.by')}</span></a>
     </footer>
   {/if}
 </div>
@@ -406,8 +408,18 @@
     align-items: center;
     gap: 6px;
   }
-  .secure a {
-    color: var(--text-2);
+  .maker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.25s;
+  }
+  .maker:hover,
+  .maker:active {
+    color: #c9b27c;
   }
   .dropzone {
     position: fixed;

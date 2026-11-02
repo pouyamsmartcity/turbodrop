@@ -138,7 +138,9 @@ npm run desktop:build
 [MIT](LICENSE) © ۲۰۲۶ [پویام](https://www.pouyam.com)
 
 <div align="center">
-<sub>ساخته‌شده با ❤️ توسط <a href="https://www.pouyam.com">پویام</a> · Rust، Tauri و Svelte</sub>
+<a href="https://www.pouyam.com/?utm_source=turbodrop&utm_medium=github-fa"><img src="docs/pouyam-mark.svg" width="28" alt="پویام" /></a>
+<br/>
+<sub>ساخت <a href="https://www.pouyam.com/?utm_source=turbodrop&utm_medium=github-fa">پویام</a>؛ همان تیمِ pouyam.com، دنیایی از بازی، خبر و شبکهٔ اجتماعی · Rust، Tauri و Svelte</sub>
 <br/>
 <sub>AirDrop علامت تجاری Apple Inc. است. توربودراپ پروژه‌ای مستقل است و هیچ ارتباطی با اپل ندارد.</sub>
 </div>
