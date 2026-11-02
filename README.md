@@ -159,6 +159,10 @@ Tests: `cargo test` (engine, 25 tests incl. end-to-end transfers, resume after r
 
 Why each feature exists (with links to the requests it answers): [docs/FEATURES.md](docs/FEATURES.md). Ideas and bug reports are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Code signing policy
+
+Windows builds are being set up for free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/). Committers and reviewers are members of the pouyamsmartcity organization; approvers are the Pouyam team; signed files come only from the [release workflow](.github/workflows/release.yml). Details: [download page](https://pouyamsmartcity.github.io/turbodrop/download/#code-signing) · [privacy policy](https://pouyamsmartcity.github.io/turbodrop/privacy/).
+
 ## License
 
 [MIT](LICENSE) © 2026 [Pouyam](https://www.pouyam.com).

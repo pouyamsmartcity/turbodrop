@@ -1,6 +1,7 @@
 // Builds the landing page in English and Persian: node site/build.mjs → site/dist
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { downloadPage, privacyPage } from './pages.mjs';
 
 const HERE = import.meta.dirname;
 const ROOT = join(HERE, '..');
@@ -253,12 +254,16 @@ function page(lang) {
 </section>
 </main>
 
-<footer><p>${t.footer}</p><p class="tiny">© 2026 Pouyam · MIT · <a href="${REPO}">GitHub</a> · <a href="${base}llms.txt">llms.txt</a></p></footer>
+<footer><p>${t.footer}</p><p class="tiny">© 2026 Pouyam · MIT · <a href="${REPO}">GitHub</a> · <a href="${base}download/">Download</a> · <a href="${base}privacy/">Privacy</a> · <a href="${base}llms.txt">llms.txt</a></p></footer>
 </body>
 </html>`;
 }
 
 mkdirSync(join(OUT, 'fa'), { recursive: true });
+mkdirSync(join(OUT, 'download'), { recursive: true });
+mkdirSync(join(OUT, 'privacy'), { recursive: true });
+writeFileSync(join(OUT, 'download', 'index.html'), downloadPage());
+writeFileSync(join(OUT, 'privacy', 'index.html'), privacyPage());
 writeFileSync(join(OUT, 'index.html'), page('en'));
 writeFileSync(join(OUT, 'fa', 'index.html'), page('fa'));
 cpSync(join(HERE, 'style.css'), join(OUT, 'style.css'));
@@ -273,6 +278,6 @@ try {
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 writeFileSync(
   join(OUT, 'sitemap.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}/</loc></url><url><loc>${SITE}/fa/</loc></url></urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}/</loc></url><url><loc>${SITE}/fa/</loc></url><url><loc>${SITE}/download/</loc></url><url><loc>${SITE}/privacy/</loc></url></urlset>\n`,
 );
 console.log('site built in', OUT, dirname(OUT) ? '' : '');
