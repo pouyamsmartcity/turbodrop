@@ -460,3 +460,53 @@ footer {
     transition: none !important;
   }
 }
+
+.doc {
+  max-width: 860px;
+  padding-top: 56px;
+  padding-bottom: 60px;
+}
+.doc h1 {
+  font-size: clamp(34px, 5vw, 52px);
+  text-align: start;
+  margin: 0 0 14px;
+}
+.doc h2 {
+  text-align: start;
+  font-size: 26px;
+  margin: 46px 0 14px;
+}
+.doc .lead {
+  margin: 0 0 26px;
+  max-width: none;
+}
+.doc li {
+  margin: 8px 0;
+  color: var(--text-2);
+}
+.doc li b {
+  color: var(--text);
+}
+.doc code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.dl {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  border-collapse: separate;
+}
+.dl td,
+.dl th {
+  vertical-align: middle;
+}
+.btn.small {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px;
+}
