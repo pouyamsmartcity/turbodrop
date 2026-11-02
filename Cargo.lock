@@ -5203,7 +5203,7 @@ dependencies = [
 
 [[package]]
 name = "turbodrop-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "clap",
@@ -5216,7 +5216,7 @@ dependencies = [
 
 [[package]]
 name = "turbodrop-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "axum",
@@ -5245,7 +5245,7 @@ dependencies = [
 
 [[package]]
 name = "turbodrop-desktop"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "qrcode",

@@ -42,12 +42,12 @@ Every file below is built from the public source code by <a href="${REPO}/action
 The newest files are always on the <a href="${REPO}/releases/latest">latest release</a> page.</p>
 <table class="dl">
 <tbody>
-${row('Windows', 'Turbodrop_0.1.0_x64-setup.exe', 'Recommended. Installs for your user only, no admin needed.')}
-${row('Windows (MSI)', 'Turbodrop_0.1.0_x64_en-US.msi', 'For managed deployments.')}
-${row('macOS (Apple silicon)', 'Turbodrop_0.1.0_aarch64.dmg', 'First launch: right-click → Open.')}
-${row('macOS (Intel)', 'Turbodrop_0.1.0_x64.dmg', 'First launch: right-click → Open.')}
-${row('Linux (Debian/Ubuntu)', 'Turbodrop_0.1.0_amd64.deb', '')}
-${row('Linux (AppImage)', 'Turbodrop_0.1.0_amd64.AppImage', '')}
+${row('Windows', 'Turbodrop_0.1.1_x64-setup.exe', 'Recommended. Installs for your user only, no admin needed.')}
+${row('Windows (MSI)', 'Turbodrop_0.1.1_x64_en-US.msi', 'For managed deployments.')}
+${row('macOS (Apple silicon)', 'Turbodrop_0.1.1_aarch64.dmg', 'First launch: right-click → Open.')}
+${row('macOS (Intel)', 'Turbodrop_0.1.1_x64.dmg', 'First launch: right-click → Open.')}
+${row('Linux (Debian/Ubuntu)', 'Turbodrop_0.1.1_amd64.deb', '')}
+${row('Linux (AppImage)', 'Turbodrop_0.1.1_amd64.AppImage', '')}
 ${row('Command line', 'turbodrop-windows-x64.exe', 'Also turbodrop-macos-arm64, turbodrop-macos-x64 and turbodrop-linux-x64.')}
 </tbody>
 </table>

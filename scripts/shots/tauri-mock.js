@@ -9,9 +9,9 @@
   const fa = lang === 'fa';
 
   const peers = [
-    { device: { id: 'mac', name: fa ? 'مک‌بوکِ سارا' : 'Sara’s MacBook', platform: 'macos', version: '0.1.0', port: 47474, publicKey: 'k1', fingerprint: '4A12-5D65-BC56-B6E4' }, address: '192.168.1.24', lastSeen: now, source: 'lan', trusted: true, verification: '🌵 🍄 🦉 🎧', keyChanged: false },
-    { device: { id: 'pc', name: fa ? 'کامپیوتر اتاق کار' : 'Studio PC', platform: 'windows', version: '0.1.0', port: 47474, publicKey: 'k2', fingerprint: '9C01-77AE-11B2-0F3D' }, address: '192.168.1.31', lastSeen: now, source: 'lan', trusted: false, verification: '🚀 🍉 🐳 ⚡', keyChanged: false },
-    { device: { id: 'linux', name: 'Ubuntu Workstation', platform: 'linux', version: '0.1.0', port: 47474, publicKey: 'k3', fingerprint: '2B7C-0A44-9E10-CC51' }, address: '192.168.1.40', lastSeen: now, source: 'lan', trusted: false, verification: '🦊 🌈 🎯 🍋', keyChanged: false },
+    { device: { id: 'mac', name: fa ? 'مک‌بوکِ سارا' : 'Sara’s MacBook', platform: 'macos', version: '0.1.1', port: 47474, publicKey: 'k1', fingerprint: '4A12-5D65-BC56-B6E4' }, address: '192.168.1.24', lastSeen: now, source: 'lan', trusted: true, verification: '🌵 🍄 🦉 🎧', keyChanged: false },
+    { device: { id: 'pc', name: fa ? 'کامپیوتر اتاق کار' : 'Studio PC', platform: 'windows', version: '0.1.1', port: 47474, publicKey: 'k2', fingerprint: '9C01-77AE-11B2-0F3D' }, address: '192.168.1.31', lastSeen: now, source: 'lan', trusted: false, verification: '🚀 🍉 🐳 ⚡', keyChanged: false },
+    { device: { id: 'linux', name: 'Ubuntu Workstation', platform: 'linux', version: '0.1.1', port: 47474, publicKey: 'k3', fingerprint: '2B7C-0A44-9E10-CC51' }, address: '192.168.1.40', lastSeen: now, source: 'lan', trusted: false, verification: '🦊 🌈 🎯 🍋', keyChanged: false },
   ];
   const clients = [
     { id: 'iphone', name: 'iPhone 15 Pro', platform: 'ios', online: true, lastSeen: now },
@@ -28,7 +28,7 @@
     { id: 't6', direction: 'out', kind: 'device', peerId: 'linux', peerName: 'Ubuntu Workstation', peerPlatform: 'linux', status: 'done', files: [f('e', 'turbodrop-src.zip', 212 * MB, 212 * MB, 'done')], totalBytes: 212 * MB, doneBytes: 212 * MB, speed: 0, startedAt: now - 26 * 3600e3, finishedAt: now - 26 * 3600e3 },
   ];
   const snapshot = {
-    info: { id: 'me', name: fa ? 'لپ‌تاپ پویام' : 'Pouyam-Laptop', platform: 'windows', version: '0.1.0', port: 47474, publicKey: 'me', fingerprint: '7E3A-91C4-55D0-A2F8' },
+    info: { id: 'me', name: fa ? 'لپ‌تاپ پویام' : 'Pouyam-Laptop', platform: 'windows', version: '0.1.1', port: 47474, publicKey: 'me', fingerprint: '7E3A-91C4-55D0-A2F8' },
     settings: { deviceName: fa ? 'لپ‌تاپ پویام' : 'Pouyam-Laptop', downloadDir: 'C:\\Users\\you\\Downloads\\Turbodrop', requireApproval: true, askBrowsers: false },
     app: { theme, lang, accent: q.get('accent') || 'aurora', autostart: true, tray: true, contextMenu: true, notifications: true, keepAwake: true },
     invite: { port: 47474, urls: [{ label: 'Wi-Fi', ip: '192.168.1.10', url: 'http://192.168.1.10:47474/#Qm3x9KpLw2Ta.7Hk2Jq9VrX4bN8sYc1LpE0wZ5uF3dGiAoT6mRyKxQe' }, { label: 'Ethernet', ip: '10.0.0.5', url: 'http://10.0.0.5:47474/#Qm3x9KpLw2Ta.7Hk2Jq9VrX4bN8sYc1LpE0wZ5uF3dGiAoT6mRyKxQe' }] },
