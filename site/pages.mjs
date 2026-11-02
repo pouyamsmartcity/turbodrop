@@ -2,6 +2,7 @@
 
 const REPO = 'https://github.com/pouyamsmartcity/turbodrop';
 const DL = `${REPO}/releases/latest/download`;
+const MARK = '<svg class="pm" width="15" height="15" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.9" stroke-linecap="round" aria-hidden="true"><path d="M10 13v16"/><circle cx="18" cy="13" r="8"/><circle cx="26.2" cy="5.2" r="2.2" fill="currentColor" stroke="none"/></svg>';
 
 function shell(title, desc, body) {
   return `<!doctype html>
@@ -20,7 +21,7 @@ function shell(title, desc, body) {
 <header class="top">
   <a class="brand" href="../"><img src="../favicon.svg" width="30" height="30" alt="" />Turbodrop</a>
   <nav><a href="../">Home</a><a href="../download/">Download</a><a href="../privacy/">Privacy</a><a href="${REPO}">GitHub</a></nav>
-  <div class="right"><a class="lang" href="../fa/">فارسی</a></div>
+  <div class="right"><a class="maker" href="https://www.pouyam.com/?utm_source=turbodrop&amp;utm_medium=website-header">${MARK}<span>by Pouyam</span></a><a class="lang" href="../fa/">فارسی</a></div>
 </header>
 <main class="doc">
 ${body}

@@ -5,6 +5,8 @@ export const fa: Dict = {
   'app.name': 'توربودراپ',
   'app.tagline': 'جابه‌جایی فایل بین گوشی و کامپیوتر',
   'app.by': 'ساخت پویام',
+  'brand.about': 'توربودراپ را تیم پویام ساخته؛ همان تیمِ pouyam.com، دنیایی از بازی، خبر و شبکهٔ اجتماعی.',
+  'brand.visit': 'سری به پویام بزنید',
 
   'conn.connecting': 'در حال اتصال…',
   'conn.connected': 'وصل به {name}',

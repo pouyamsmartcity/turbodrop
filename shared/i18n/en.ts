@@ -3,6 +3,8 @@ export const en = {
   'app.name': 'Turbodrop',
   'app.tagline': 'Send files between your phone and computer',
   'app.by': 'by Pouyam',
+  'brand.about': 'Turbodrop is made by Pouyam, the team behind pouyam.com — a social world of games, news and creators.',
+  'brand.visit': 'Visit Pouyam',
 
   'conn.connecting': 'Connecting…',
   'conn.connected': 'Connected to {name}',

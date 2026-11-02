@@ -2,6 +2,7 @@
   import { open } from '@tauri-apps/plugin-dialog';
   import { LANGUAGES, type Lang } from '../../../../shared/i18n';
   import Icon from '../../../../shared/ui/Icon.svelte';
+  import PouyamMark from '../../../../shared/ui/PouyamMark.svelte';
   import { t } from '../lib/i18n';
   import { ACCENTS, store, type AppSettings, type Settings } from '../lib/store.svelte';
 
@@ -112,7 +113,11 @@
       <div class="ab"><b class="grad-text">Turbodrop</b><span class="tiny">{t('set.version', { v: store.info?.version ?? '' })}</span></div>
       <div class="links">
         <button class="btn btn-sm" onclick={() => store.openUrl('https://github.com/pouyamsmartcity/turbodrop')}><Icon name="github" size={15} />{t('set.github')}</button>
-        <button class="btn btn-sm btn-ghost" onclick={() => store.openUrl('https://www.pouyam.com')}><Icon name="star" size={15} />{t('app.by')}</button>
+      </div>
+      <div class="maker">
+        <PouyamMark size={30} color="#c9b27c" />
+        <p>{t('brand.about')}</p>
+        <button class="btn btn-sm" onclick={() => store.openUrl('https://www.pouyam.com/?utm_source=turbodrop&utm_medium=app-about')}>{t('brand.visit')}</button>
       </div>
     </section>
   </div>
@@ -285,6 +290,23 @@
   .links {
     display: flex;
     gap: 8px;
+  }
+  .maker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+    padding: 14px;
+    border-radius: var(--r);
+    border: 1px solid color-mix(in oklab, #c9b27c 28%, var(--border));
+    background: color-mix(in oklab, #c9b27c 6%, transparent);
+  }
+  .maker p {
+    flex: 1;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-2);
   }
   @media (max-width: 1000px) {
     .cols {
