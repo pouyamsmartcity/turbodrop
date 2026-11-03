@@ -1,0 +1,12 @@
+{
+  "name": "turbodrop-teaser",
+  "private": true,
+  "description": "Turbodrop promo videos (Instagram Reel 9:16 and YouTube 16:9, English and Persian), rendered from code",
+  "scripts": {
+    "build": "./build.sh"
+  },
+  "devDependencies": {
+    "qrcode-generator": "2.0.4",
+    "vazirmatn": "33.0.3"
+  }
+}
