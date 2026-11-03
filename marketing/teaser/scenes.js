@@ -383,10 +383,10 @@
     mk(`<div class="qr" style="width:${qs}px;height:${qs}px;box-shadow:0 0 80px rgba(99,102,241,.7)">${qrSvg(window.QR.site)}</div>`, V ? { y: H * 0.41 } : { x: W * (FA ? 0.2 : 0.8), y: H * 0.52 })
       .k(0.2, 0.6, { o: 0, s: 0.5, r: -10 }, { o: 1, s: 1, r: 0 }, 'back').k(d - 0.2, d, {}, { o: 0 });
     const ux = V ? W / 2 : W * (FA ? 0.62 : 0.38);
-    mk(`<div class="chip" style="font-size:${(V ? 4.1 : 3) * U}px;direction:ltr;border-color:rgba(99,102,241,.8);box-shadow:0 0 40px rgba(99,102,241,.5)">${ICON.globe.replace('<svg', '<svg style="width:1em;height:1em"')}${URL_SITE}</div>`, { x: ux, y: H * (V ? 0.64 : 0.47) })
-      .k(0.5, 0.85, { o: 0, y: H * (V ? 0.68 : 0.52) }, { o: 1, y: H * (V ? 0.64 : 0.47) }, 'expo').k(d - 0.2, d, {}, { o: 0 });
-    mk(tx(C.platLine, V ? 3.7 : 2.8, 'muted', 'font-weight:600'), { x: ux, y: H * (V ? 0.705 : 0.6) }).k(0.9, 1.2, { o: 0 }, { o: 1 }).k(d - 0.2, d, {}, { o: 0 });
-    mk(`<div class="chip" style="font-size:${(V ? 3.8 : 2.8) * U}px"><i></i>${C.inst}</div>`, { x: ux, y: H * (V ? 0.76 : 0.72) }).k(1.2, 1.5, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
+    mk(`<div class="chip" style="font-size:${(V ? 4.1 : 3) * U}px;direction:ltr;border-color:rgba(99,102,241,.8);box-shadow:0 0 40px rgba(99,102,241,.5)">${ICON.globe.replace('<svg', '<svg style="width:1em;height:1em"')}${URL_SITE}</div>`, { x: ux, y: H * (V ? 0.62 : 0.47) })
+      .k(0.5, 0.85, { o: 0, y: H * (V ? 0.66 : 0.52) }, { o: 1, y: H * (V ? 0.62 : 0.47) }, 'expo').k(d - 0.2, d, {}, { o: 0 });
+    mk(tx(C.platLine, V ? 3.7 : 2.8, 'muted', 'font-weight:600'), { x: ux, y: H * (V ? 0.68 : 0.6) }).k(0.9, 1.2, { o: 0 }, { o: 1 }).k(d - 0.2, d, {}, { o: 0 });
+    mk(`<div class="chip" style="font-size:${(V ? 3.8 : 2.8) * U}px"><i></i>${C.inst}</div>`, { x: ux, y: H * (V ? 0.73 : 0.72) }).k(1.2, 1.5, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
     streak(0, 1); cue(0.2, 'pop'); cue(0.5, 'whoosh'); cue(1.2, 'pop');
   };
 

@@ -108,7 +108,7 @@ def ts(x):
 subs = SUBS[(fmt, lang)]
 if any(subs):
     limit = 32 if fmt == 'reel' else 62
-    cards, n = [], 0
+    cards = []
     for (a, b), s in zip(timing, subs):
         if not s:
             continue
@@ -117,10 +117,11 @@ if any(subs):
         t = a
         for p in parts_:
             d = (b - a) * len(p) / total
-            n += 1
-            cards.append(f'{n}\n{ts(t)} --> {ts(min(t + d + 0.25, b + 0.6))}\n{p}\n')
+            cards.append([t, min(t + d + 0.25, b + 0.6), p])
             t += d
+    for c, nxt in zip(cards, cards[1:]):  # never two cards on screen at once
+        c[1] = min(c[1], nxt[0] - 0.02)
     srt = os.path.join(DIR, 'out', f'{fmt}-{lang}.srt')
-    open(srt, 'w', encoding='utf-8').write('\n'.join(cards))
+    open(srt, 'w', encoding='utf-8').write('\n'.join(f'{i}\n{ts(a_)} --> {ts(b_)}\n{p}\n' for i, (a_, b_, p) in enumerate(cards, 1)))
     print(srt)
 subprocess.run([os.path.join(DIR, 'mix.sh'), fmt, lang, track, '0'], check=True)
