@@ -1,0 +1,226 @@
+{
+ "reel-fa": [
+  {
+   "t": 0,
+   "text": "[whispers] از آیفون به ویندوز… [shouts] هنوز با کابل؟"
+  },
+  {
+   "t": 2,
+   "text": "امروز… روز مسابقه‌ست!"
+  },
+  {
+   "t": 4,
+   "text": "کابل. فضای ابری. نصب برنامه."
+  },
+  {
+   "t": 6,
+   "text": "[excited] این… توربودراپه!"
+  },
+  {
+   "t": 8,
+   "text": "کد رو اسکن کن، بفرست. روی گوشی هیچی نصب نمی‌شه."
+  },
+  {
+   "t": 12,
+   "text": "با تمام سرعت وای‌فای؛ قطع هم بشه، از همون‌جا ادامه می‌ده."
+  },
+  {
+   "t": 14,
+   "text": "رمزنگاری سرتاسری. بدون فضای ابری، بدون حساب کاربری."
+  },
+  {
+   "t": 16,
+   "text": "همهٔ دستگاه‌ها."
+  },
+  {
+   "t": 18,
+   "text": "حتی دستیار هوش مصنوعیت هم با یه دستور می‌تونه بفرسته."
+  },
+  {
+   "t": 22,
+   "text": "[shouts] پایان بازی! توربودراپ برنده‌ست!"
+  },
+  {
+   "t": 24,
+   "text": "رایگان و متن‌باز. همین حالا بگیرش."
+  },
+  {
+   "t": 28,
+   "text": "پویام. متن‌باز، برای همه."
+  }
+ ],
+ "reel-en": [
+  {
+   "t": 0,
+   "text": "[whispers] iPhone to Windows… [shouts] still using cables?"
+  },
+  {
+   "t": 2,
+   "text": "It's… matchday."
+  },
+  {
+   "t": 4,
+   "text": "Cables. Cloud. Apps."
+  },
+  {
+   "t": 6,
+   "text": "[excited] This… is Turbodrop."
+  },
+  {
+   "t": 8,
+   "text": "Scan the code. Send. Nothing to install on the phone."
+  },
+  {
+   "t": 12,
+   "text": "Full Wi-Fi speed — and if it drops, it picks up where it stopped."
+  },
+  {
+   "t": 14,
+   "text": "End-to-end encrypted. No cloud. No account."
+  },
+  {
+   "t": 16,
+   "text": "Every device."
+  },
+  {
+   "t": 18,
+   "text": "And your AI agent can send it too. One command."
+  },
+  {
+   "t": 22,
+   "text": "[shouts] Full time! Turbodrop wins!"
+  },
+  {
+   "t": 24,
+   "text": "Free. Open source. Get it now."
+  },
+  {
+   "t": 28,
+   "text": "Pouyam. Open source, for everyone."
+  }
+ ],
+ "youtube-fa": [
+  {
+   "t": 0,
+   "text": "از آیفون به ویندوز… از اندروید به مک… [shouts] هنوز با کابل؟"
+  },
+  {
+   "t": 4,
+   "text": "امشب روز مسابقه‌ست: گوشی‌ات، در برابر کامپیوترت."
+  },
+  {
+   "t": 8,
+   "text": "روش قدیمی؟ کابل. فضای ابری. یه برنامهٔ دیگه برای نصب."
+  },
+  {
+   "t": 12,
+   "text": "[excited] با توربودراپ آشنا شو. مثل ایردراپ، برای همهٔ دستگاه‌ها."
+  },
+  {
+   "t": 16,
+   "text": "توربودراپ رو روی کامپیوتر باز کن، کد QR رو با دوربین گوشی اسکن کن… و بفرست. عکس، فیلم، پوشه، متن. روی گوشی هیچی لازم نیست نصب بشه."
+  },
+  {
+   "t": 24,
+   "text": "وسط کار وای‌فای قطع شد؟ از آخرین تکه ادامه می‌ده. کامپیوترها با یه کد چهار ایموجی به هم وصل می‌شن. دستگاه‌های نزدیک خودشون پیدا می‌شن. عکس‌ها با پیش‌نمایش می‌رسن و همه‌شون رو یه‌جا به‌صورت زیپ ذخیره می‌کنی. پوشه‌ها ساختارشون رو نگه می‌دارن و فایل تکراری دوباره فرستاده نمی‌شه. انگار مال خود ویندوز یازده‌ه؛ اونم به دوازده زبان."
+  },
+  {
+   "t": 40,
+   "text": "با تمام سرعت وای‌فای. اتصال قطع بشه؟ دقیقاً از همون‌جا ادامه می‌ده."
+  },
+  {
+   "t": 44,
+   "text": "نصب‌کنندهٔ چهار مگابایتی. موتورش یه گیگ رو توی هفت و نیم ثانیه جابه‌جا می‌کنه؛ تنها محدودیت، شبکهٔ خودته."
+  },
+  {
+   "t": 48,
+   "text": "رمزنگاری سرتاسری. بدون فضای ابری، بدون حساب کاربری، بدون اینترنت."
+  },
+  {
+   "t": 52,
+   "text": "ویندوز، آیفون، اندروید، مک و لینوکس."
+  },
+  {
+   "t": 56,
+   "text": "برای برنامه‌نویس‌ها هم یه خط فرمان واقعی با خروجی جیسون داره؛ پس دستیار هوش مصنوعیت، مثل کلاد کد، کرسر، کودکس یا جمنای، با یه دستور می‌تونه فایل رو به گوشیت بفرسته."
+  },
+  {
+   "t": 64,
+   "text": "[shouts] پایان بازی! توربودراپ چهار، کابل صفر!"
+  },
+  {
+   "t": 68,
+   "text": "توربودراپ رو متن‌باز پویام ساخته: ابزارهای رایگانی که برای خودمون می‌سازیم و به همه می‌دیم؛ به برنامه‌نویس‌ها و به همهٔ دنیا."
+  },
+  {
+   "t": 76,
+   "text": "رایگانه، متن‌بازه. از سایتش بگیرش؛ لینک توی توضیحات."
+  },
+  {
+   "t": 82,
+   "text": "پویام‌ورلد رو توی اینستاگرام و یوتیوب دنبال کن. اگه به کارت اومد… بهش توی گیت‌هاب ستاره بده."
+  }
+ ],
+ "youtube-en": [
+  {
+   "t": 0,
+   "text": "iPhone to Windows… Android to Mac… [shouts] still using cables?"
+  },
+  {
+   "t": 4,
+   "text": "Tonight's matchday: your phone… against your PC."
+  },
+  {
+   "t": 8,
+   "text": "The old way? Cables. The cloud. Yet another app."
+  },
+  {
+   "t": 12,
+   "text": "[excited] Meet Turbodrop. Like AirDrop — for every device."
+  },
+  {
+   "t": 16,
+   "text": "Open Turbodrop on the computer, scan the QR code with your phone's camera… and send. Photos, videos, folders, text. The phone needs nothing installed."
+  },
+  {
+   "t": 24,
+   "text": "Lose the Wi-Fi halfway? It resumes from the last chunk. Computers pair with a four-emoji code. Nearby devices show up on their own. Photos arrive with previews — save them all as one ZIP. Folders keep their structure, and files already there are skipped. It feels at home on Windows 11 — in twelve languages."
+  },
+  {
+   "t": 40,
+   "text": "Full Wi-Fi speed. Drop the connection — and it picks up right where it stopped."
+  },
+  {
+   "t": 44,
+   "text": "A four-megabyte installer. An engine that moves a gigabyte in seven and a half seconds — your network is the only limit."
+  },
+  {
+   "t": 48,
+   "text": "End-to-end encrypted. No cloud, no account, no internet needed."
+  },
+  {
+   "t": 52,
+   "text": "Windows, iPhone, Android, Mac and Linux."
+  },
+  {
+   "t": 56,
+   "text": "And for developers: a real command line with JSON output. So your AI agent — Claude Code, Cursor, Codex, Gemini CLI — can send a file to your phone with a single command."
+  },
+  {
+   "t": 64,
+   "text": "[shouts] Full time! Turbodrop four, cables nil!"
+  },
+  {
+   "t": 68,
+   "text": "Turbodrop is made by Pouyam Open Source: free tools we build for ourselves and give to everyone — developers and the whole world."
+  },
+  {
+   "t": 76,
+   "text": "It's free. It's open source. Get it from the link in the description."
+  },
+  {
+   "t": 82,
+   "text": "Follow pouyamworld on Instagram and YouTube. And if it helped you… give it a star on GitHub."
+  }
+ ]
+}
