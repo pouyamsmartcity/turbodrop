@@ -13,4 +13,10 @@ ffmpeg -loglevel error -y -i out/$f-$l-silent.mp4 -i out/$f-music.wav -i "$vo" -
 [1:a][key]sidechaincompress=threshold=0.03:ratio=8:attack=15:release=350:makeup=1[duck];
 [duck][vo]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1:LRA=9[a]" \
   -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 256k -t "$dur" -movflags +faststart out/turbodrop-$f-$l-voice.mp4
+# English subtitles burned in (Instagram has no subtitle upload), above the Reels buttons; the .srt is kept for YouTube.
+if [ -f out/$f-$l.srt ]; then
+  if [ "$f" = reel ]; then style="FontName=Inter Display,Bold=1,FontSize=8.5,PrimaryColour=&H00FFFFFF,BackColour=&H99000000,BorderStyle=3,Outline=1.2,Shadow=0,MarginV=45,MarginL=12,MarginR=12"; else style="FontName=Inter Display,Bold=1,FontSize=13,PrimaryColour=&H00FFFFFF,BackColour=&H99000000,BorderStyle=3,Outline=1.2,Shadow=0,MarginV=12"; fi
+  ffmpeg -loglevel error -y -i out/turbodrop-$f-$l-voice.mp4 -vf "subtitles=out/$f-$l.srt:force_style='$style'" -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -c:a copy -movflags +faststart out/turbodrop-$f-$l-voice-subs.mp4
+  echo out/turbodrop-$f-$l-voice-subs.mp4
+fi
 echo out/turbodrop-$f-$l-voice.mp4

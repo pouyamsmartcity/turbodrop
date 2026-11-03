@@ -2,51 +2,63 @@
  "reel-fa": [
   {
    "t": 0,
-   "text": "[whispers] از آیفون به ویندوز… [shouts] هنوز با کابل؟"
+   "text": "[whispers] از آیفون به ویندوز… [shouts] هنوز با کابل؟",
+   "sub_en": "iPhone to Windows… still using a cable?"
   },
   {
    "t": 2,
-   "text": "امروز… روز مسابقه‌ست!"
+   "text": "امروز… روز مسابقه‌ست!",
+   "sub_en": "Today… is matchday!"
   },
   {
    "t": 4,
-   "text": "کابل. فضای ابری. نصب برنامه."
+   "text": "کابل. فضای ابری. نصب برنامه.",
+   "sub_en": "Cables. The cloud. Installing an app."
   },
   {
    "t": 6,
-   "text": "[excited] این… توربودراپه!"
+   "text": "[excited] این… توربودراپه!",
+   "sub_en": "This… is Turbodrop!"
   },
   {
    "t": 8,
-   "text": "کد رو اسکن کن، بفرست. روی گوشی هیچی نصب نمی‌شه."
+   "text": "کد رو اسکن کن، بفرست. روی گوشی هیچی نصب نمی‌شه.",
+   "sub_en": "Scan the code, send. Nothing gets installed on the phone."
   },
   {
    "t": 12,
-   "text": "با تمام سرعت وای‌فای؛ قطع هم بشه، از همون‌جا ادامه می‌ده."
+   "text": "با تمام سرعت وای‌فای؛ قطع هم بشه، از همون‌جا ادامه می‌ده.",
+   "sub_en": "At full Wi‑Fi speed; if it drops, it continues right from there."
   },
   {
    "t": 14,
-   "text": "رمزنگاری سرتاسری. بدون فضای ابری، بدون حساب کاربری."
+   "text": "رمزنگاری سرتاسری. بدون فضای ابری، بدون حساب کاربری.",
+   "sub_en": "End‑to‑end encryption. No cloud, no account."
   },
   {
    "t": 16,
-   "text": "همهٔ دستگاه‌ها."
+   "text": "همهٔ دستگاه‌ها.",
+   "sub_en": "Every device."
   },
   {
    "t": 18,
-   "text": "حتی دستیار هوش مصنوعیت هم با یه دستور می‌تونه بفرسته."
+   "text": "حتی دستیار هوش مصنوعیت هم با یه دستور می‌تونه بفرسته.",
+   "sub_en": "Even your AI assistant can send it, with one command."
   },
   {
    "t": 22,
-   "text": "[shouts] پایان بازی! توربودراپ برنده‌ست!"
+   "text": "[shouts] پایان بازی! توربودراپ برنده‌ست!",
+   "sub_en": "Full time! Turbodrop wins!"
   },
   {
    "t": 24,
-   "text": "رایگان و متن‌باز. همین حالا بگیرش."
+   "text": "رایگان و متن‌باز. همین حالا بگیرش.",
+   "sub_en": "Free and open source. Get it now."
   },
   {
    "t": 28,
-   "text": "پویام. متن‌باز، برای همه."
+   "text": "پویام. متن‌باز، برای همه.",
+   "sub_en": "Pouyam. Open source, for everyone."
   }
  ],
  "reel-en": [
@@ -102,63 +114,78 @@
  "youtube-fa": [
   {
    "t": 0,
-   "text": "از آیفون به ویندوز… از اندروید به مک… [shouts] هنوز با کابل؟"
+   "text": "از آیفون به ویندوز… از اندروید به مک… [shouts] هنوز با کابل؟",
+   "sub_en": "iPhone to Windows… Android to Mac… still using a cable?"
   },
   {
    "t": 4,
-   "text": "امشب روز مسابقه‌ست: گوشی‌ات، در برابر کامپیوترت."
+   "text": "امشب روز مسابقه‌ست: گوشی‌ات، در برابر کامپیوترت.",
+   "sub_en": "Tonight is matchday: your phone, against your computer."
   },
   {
    "t": 8,
-   "text": "روش قدیمی؟ کابل. فضای ابری. یه برنامهٔ دیگه برای نصب."
+   "text": "روش قدیمی؟ کابل. فضای ابری. یه برنامهٔ دیگه برای نصب.",
+   "sub_en": "The old way? Cables. The cloud. Yet another app to install."
   },
   {
    "t": 12,
-   "text": "[excited] با توربودراپ آشنا شو. مثل ایردراپ، برای همهٔ دستگاه‌ها."
+   "text": "[excited] با توربودراپ آشنا شو. مثل ایردراپ، برای همهٔ دستگاه‌ها.",
+   "sub_en": "Meet Turbodrop. Like AirDrop, for every device."
   },
   {
    "t": 16,
-   "text": "توربودراپ رو روی کامپیوتر باز کن، کد QR رو با دوربین گوشی اسکن کن… و بفرست. عکس، فیلم، پوشه، متن. روی گوشی هیچی لازم نیست نصب بشه."
+   "text": "توربودراپ رو روی کامپیوتر باز کن، کد QR رو با دوربین گوشی اسکن کن… و بفرست. عکس، فیلم، پوشه، متن. روی گوشی هیچی لازم نیست نصب بشه.",
+   "sub_en": "Open Turbodrop on the computer, scan the QR code with your phone's camera… and send. Photos, videos, folders, text. Nothing needs to be installed on the phone."
   },
   {
    "t": 24,
-   "text": "وسط کار وای‌فای قطع شد؟ از آخرین تکه ادامه می‌ده. کامپیوترها با یه کد چهار ایموجی به هم وصل می‌شن. دستگاه‌های نزدیک خودشون پیدا می‌شن. عکس‌ها با پیش‌نمایش می‌رسن و همه‌شون رو یه‌جا به‌صورت زیپ ذخیره می‌کنی. پوشه‌ها ساختارشون رو نگه می‌دارن و فایل تکراری دوباره فرستاده نمی‌شه. انگار مال خود ویندوز یازده‌ه؛ اونم به دوازده زبان."
+   "text": "وسط کار وای‌فای قطع شد؟ از آخرین تکه ادامه می‌ده. کامپیوترها با یه کد چهار ایموجی به هم وصل می‌شن. دستگاه‌های نزدیک خودشون پیدا می‌شن. عکس‌ها با پیش‌نمایش می‌رسن و همه‌شون رو یه‌جا به‌صورت زیپ ذخیره می‌کنی. پوشه‌ها ساختارشون رو نگه می‌دارن و فایل تکراری دوباره فرستاده نمی‌شه. انگار مال خود ویندوز یازده‌ه؛ اونم به دوازده زبان.",
+   "sub_en": "Wi‑Fi dropped halfway? It continues from the last chunk. Computers pair with a four‑emoji code. Nearby devices find each other. Photos arrive with previews, and you save them all at once as a ZIP. Folders keep their structure, and duplicate files aren't sent again. It feels like part of Windows 11, in twelve languages."
   },
   {
    "t": 40,
-   "text": "با تمام سرعت وای‌فای. اتصال قطع بشه؟ دقیقاً از همون‌جا ادامه می‌ده."
+   "text": "با تمام سرعت وای‌فای. اتصال قطع بشه؟ دقیقاً از همون‌جا ادامه می‌ده.",
+   "sub_en": "At full Wi‑Fi speed. Connection lost? It continues exactly from there."
   },
   {
    "t": 44,
-   "text": "نصب‌کنندهٔ چهار مگابایتی. موتورش یه گیگ رو توی هفت و نیم ثانیه جابه‌جا می‌کنه؛ تنها محدودیت، شبکهٔ خودته."
+   "text": "نصب‌کنندهٔ چهار مگابایتی. موتورش یه گیگ رو توی هفت و نیم ثانیه جابه‌جا می‌کنه؛ تنها محدودیت، شبکهٔ خودته.",
+   "sub_en": "A four‑megabyte installer. Its engine moves a gigabyte in seven and a half seconds; the only limit is your own network."
   },
   {
    "t": 48,
-   "text": "رمزنگاری سرتاسری. بدون فضای ابری، بدون حساب کاربری، بدون اینترنت."
+   "text": "رمزنگاری سرتاسری. بدون فضای ابری، بدون حساب کاربری، بدون اینترنت.",
+   "sub_en": "End‑to‑end encryption. No cloud, no account, no internet."
   },
   {
    "t": 52,
-   "text": "ویندوز، آیفون، اندروید، مک و لینوکس."
+   "text": "ویندوز، آیفون، اندروید، مک و لینوکس.",
+   "sub_en": "Windows, iPhone, Android, Mac and Linux."
   },
   {
    "t": 56,
-   "text": "برای برنامه‌نویس‌ها هم یه خط فرمان واقعی با خروجی جیسون داره؛ پس دستیار هوش مصنوعیت، مثل کلاد کد، کرسر، کودکس یا جمنای، با یه دستور می‌تونه فایل رو به گوشیت بفرسته."
+   "text": "برای برنامه‌نویس‌ها هم یه خط فرمان واقعی با خروجی جیسون داره؛ پس دستیار هوش مصنوعیت، مثل کلاد کد، کرسر، کودکس یا جمنای، با یه دستور می‌تونه فایل رو به گوشیت بفرسته.",
+   "sub_en": "For developers, there's a real command line with JSON output, so your AI assistant, like Claude Code, Cursor, Codex or Gemini CLI, can send a file to your phone with one command."
   },
   {
    "t": 64,
-   "text": "[shouts] پایان بازی! توربودراپ چهار، کابل صفر!"
+   "text": "[shouts] پایان بازی! توربودراپ چهار، کابل صفر!",
+   "sub_en": "Full time! Turbodrop four, cables zero!"
   },
   {
    "t": 68,
-   "text": "توربودراپ رو متن‌باز پویام ساخته: ابزارهای رایگانی که برای خودمون می‌سازیم و به همه می‌دیم؛ به برنامه‌نویس‌ها و به همهٔ دنیا."
+   "text": "توربودراپ رو متن‌باز پویام ساخته: ابزارهای رایگانی که برای خودمون می‌سازیم و به همه می‌دیم؛ به برنامه‌نویس‌ها و به همهٔ دنیا.",
+   "sub_en": "Turbodrop is made by Pouyam Open Source: free tools we build for ourselves and give to everyone, to developers and the whole world."
   },
   {
    "t": 76,
-   "text": "رایگانه، متن‌بازه. از سایتش بگیرش؛ لینک توی توضیحات."
+   "text": "رایگانه، متن‌بازه. از سایتش بگیرش؛ لینک توی توضیحات.",
+   "sub_en": "It's free, it's open source. Get it from its website; the link is in the description."
   },
   {
    "t": 82,
-   "text": "پویام‌ورلد رو توی اینستاگرام و یوتیوب دنبال کن. اگه به کارت اومد… بهش توی گیت‌هاب ستاره بده."
+   "text": "پویام‌ورلد رو توی اینستاگرام و یوتیوب دنبال کن. اگه به کارت اومد… بهش توی گیت‌هاب ستاره بده.",
+   "sub_en": "Follow pouyamworld on Instagram and YouTube. If it helped you… give it a star on GitHub."
   }
  ],
  "youtube-en": [

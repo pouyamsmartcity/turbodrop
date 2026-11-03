@@ -18,6 +18,7 @@ MODEL = os.environ.get('ELEVENLABS_MODEL', 'eleven_v4')
 DIR = os.path.dirname(os.path.abspath(__file__))
 
 LINES = {tuple(k.split('-')): [(x['t'], x['text']) for x in v] for k, v in json.load(open(os.path.join(DIR, 'voice-lines.json'), encoding='utf-8')).items()}
+SUBS = {tuple(k.split('-')): [x.get('sub_en') for x in v] for k, v in json.load(open(os.path.join(DIR, 'voice-lines.json'), encoding='utf-8')).items()}
 
 
 def api(path, body=None):
@@ -60,7 +61,7 @@ def duration(p):
 # One track with every line at its scene time. A line longer than its slot is sped up a little (at most 1.3x);
 # if it still does not fit, the next line waits for it, so lines never overlap.
 TOTAL = 30 if fmt == 'reel' else 90
-inputs, chains, cursor = [], [], 0.0
+inputs, chains, cursor, timing = [], [], 0.0, []
 for i, (t, p) in enumerate(parts):
     slot_end = parts[i + 1][0] if i + 1 < len(parts) else TOTAL - 0.3
     start = max(t + 0.08, cursor)
@@ -73,6 +74,53 @@ for i, (t, p) in enumerate(parts):
     print(f'line {i:02d}: {start:5.2f}s, {d:4.2f}s, tempo {tempo:.2f}')
     inputs += ['-i', p]
     chains.append(f'[{i}:a]aresample=48000,atempo={tempo:.3f},adelay={int(start * 1000)}|{int(start * 1000)}[v{i}]')
+    timing.append((start, start + d / tempo))
 track = os.path.join(DIR, 'out', f'vo-{fmt}-{lang}.wav')
 subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', *inputs, '-filter_complex', ';'.join(chains) + ';' + ''.join(f'[v{i}]' for i in range(len(parts))) + f'amix=inputs={len(parts)}:normalize=0[a]', '-map', '[a]', track], check=True)
+
+
+def chunks(text, limit):
+    """Subtitle cards of at most `limit` characters, split at sentence ends, then commas, then words."""
+    import re
+    out = []
+    for sent in re.split(r'(?<=[.?!…;:])\s+', text):
+        while len(sent) > limit:
+            cut = max(sent.rfind(', ', 0, limit), sent.rfind(' ', 0, limit))
+            out.append(sent[: cut + 1].strip())
+            sent = sent[cut + 1:].strip()
+        if sent:
+            out.append(sent)
+    merged = []
+    for c in out:  # join short neighbours
+        if merged and len(merged[-1]) + len(c) + 1 <= limit:
+            merged[-1] += ' ' + c
+        else:
+            merged.append(c)
+    return merged
+
+
+def ts(x):
+    ms = int(round(x * 1000))
+    return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}'
+
+
+# English subtitles timed to the voice (only for lines that have a translation).
+subs = SUBS[(fmt, lang)]
+if any(subs):
+    limit = 32 if fmt == 'reel' else 62
+    cards, n = [], 0
+    for (a, b), s in zip(timing, subs):
+        if not s:
+            continue
+        parts_ = chunks(s, limit)
+        total = sum(len(p) for p in parts_)
+        t = a
+        for p in parts_:
+            d = (b - a) * len(p) / total
+            n += 1
+            cards.append(f'{n}\n{ts(t)} --> {ts(min(t + d + 0.25, b + 0.6))}\n{p}\n')
+            t += d
+    srt = os.path.join(DIR, 'out', f'{fmt}-{lang}.srt')
+    open(srt, 'w', encoding='utf-8').write('\n'.join(cards))
+    print(srt)
 subprocess.run([os.path.join(DIR, 'mix.sh'), fmt, lang, track, '0'], check=True)

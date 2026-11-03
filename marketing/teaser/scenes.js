@@ -281,7 +281,7 @@
     const body = mk(`<div style="width:${ls}px;filter:drop-shadow(0 0 40px rgba(99,102,241,.8))">${ICON.lockBody}</div>`, { x: lx, y: cy + ls * 0.1 });
     body.k(0, 0.35, { o: 0, s: 0.5 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0, s: 1.3 });
     const pos = V
-      ? [[0.5, 0.58], [0.5, 0.65], [0.5, 0.72], [0.5, 0.79]]
+      ? [[0.5, 0.56], [0.5, 0.62], [0.5, 0.68], [0.5, 0.74]]
       : [[0.2, 0.32], [0.2, 0.56], [0.8, 0.32], [0.8, 0.56]];
     C.secure.forEach((s, i) => {
       const [x, y] = pos[i];
@@ -306,7 +306,7 @@
         .k(t, t + 0.3, { o: 0, s: 1.7, r: (i % 2 ? 1 : -1) * 10 }, { o: 1, s: 1, r: 0 }, 'back').k(d - 0.2, d, {}, { o: 0, s: 0.7 });
       cue(t, 'hit', { soft: 1 });
     });
-    mk(`<div class="chip" style="font-size:${(V ? 4.4 : 3.2) * U}px">🌍 ${C.langs}</div>`, { y: H * (V ? 0.82 : 0.82) }).k(1.4 * (d / 2), 1.7 * (d / 2), { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
+    mk(`<div class="chip" style="font-size:${(V ? 4.4 : 3.2) * U}px">🌍 ${C.langs}</div>`, { y: H * (V ? 0.785 : 0.82) }).k(1.4 * (d / 2), 1.7 * (d / 2), { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
     cue(1.4 * (d / 2), 'pop');
   };
 
@@ -321,7 +321,7 @@
       <div class="term" style="padding:${2 * U}px;font-size:${(V ? 3.6 : 2.3) * U}px;color:#e2e8f0"><span class="c"></span><span class="cur" style="background:#22d3ee;color:#000">&nbsp;</span>
 <span class="o1" style="color:#a3adc8"></span></div>
       <div class="qrb" style="position:absolute;left:${2 * U}px;bottom:${2 * U}px;width:${th * 0.5}px;height:${th * 0.5}px;background:#fff;padding:6px;border-radius:8px">${q}</div></div>`,
-      V ? { y: H * 0.47 } : { x: W * 0.38, y: H * 0.6 });
+      V ? { y: H * 0.44 } : { x: W * 0.38, y: H * 0.6 });
     term.k(0.1, 0.45, { o: 0, ry: -25, s: 0.85 }, { o: 1, ry: 0, s: 1 }, 'expo').k(d - 0.2, d, {}, { o: 0, s: 0.9 });
     term.node.firstChild.style.position = 'relative';
     const c = term.node.querySelector('.c'), cur = term.node.querySelector('.cur'), o1 = term.node.querySelector('.o1'), qrb = term.node.querySelector('.qrb');
@@ -337,7 +337,7 @@
     });
     for (let i = 0; i < cmd.length; i += 2) cue(0.4 + (i / cmd.length) * 1.0 * k, 'type');
     cue(tOut - T0, 'hit');
-    const cpos = V ? [[0.28, 0.7], [0.72, 0.7], [0.28, 0.765], [0.72, 0.765]] : [[0.8, 0.4], [0.8, 0.52], [0.8, 0.64], [0.8, 0.76]];
+    const cpos = V ? [[0.28, 0.67], [0.72, 0.67], [0.28, 0.725], [0.72, 0.725]] : [[0.8, 0.4], [0.8, 0.52], [0.8, 0.64], [0.8, 0.76]];
     AGENTS.forEach((a, i) => {
       const [x, y] = cpos[i];
       const t = 2.0 * k + i * 0.2;
@@ -345,7 +345,7 @@
         .k(t, t + 0.3, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
       cue(t, 'pop');
     });
-    mk(tx(C.aiNote, V ? 3.6 : 2.6, 'muted', 'font-weight:600'), { y: H * (V ? 0.825 : 0.9) }).k(2.8 * k, 3.1 * k, { o: 0 }, { o: 1 }).k(d - 0.2, d, {}, { o: 0 });
+    mk(tx(C.aiNote, V ? 3.6 : 2.6, 'muted', 'font-weight:600'), { y: H * (V ? 0.775 : 0.9) }).k(2.8 * k, 3.1 * k, { o: 0 }, { o: 1 }).k(d - 0.2, d, {}, { o: 0 });
     cue(0, 'section', { mode: 'filtered' });
   };
 
@@ -380,13 +380,13 @@
     mk(tx(C.get, V ? 11 : 7, 'big grad'), V ? { y: H * 0.17 } : { x: W * (FA ? 0.62 : 0.38), y: H * 0.3 })
       .k(0, 0.35, { o: 0, s: 1.4, b: 14 }, { o: 1, s: 1, b: 0 }, 'expo').k(d - 0.2, d, {}, { o: 0 });
     const qs = V ? 44 * U : 30 * U;
-    mk(`<div class="qr" style="width:${qs}px;height:${qs}px;box-shadow:0 0 80px rgba(99,102,241,.7)">${qrSvg(window.QR.site)}</div>`, V ? { y: H * 0.43 } : { x: W * (FA ? 0.2 : 0.8), y: H * 0.52 })
+    mk(`<div class="qr" style="width:${qs}px;height:${qs}px;box-shadow:0 0 80px rgba(99,102,241,.7)">${qrSvg(window.QR.site)}</div>`, V ? { y: H * 0.41 } : { x: W * (FA ? 0.2 : 0.8), y: H * 0.52 })
       .k(0.2, 0.6, { o: 0, s: 0.5, r: -10 }, { o: 1, s: 1, r: 0 }, 'back').k(d - 0.2, d, {}, { o: 0 });
     const ux = V ? W / 2 : W * (FA ? 0.62 : 0.38);
-    mk(`<div class="chip" style="font-size:${(V ? 4.1 : 3) * U}px;direction:ltr;border-color:rgba(99,102,241,.8);box-shadow:0 0 40px rgba(99,102,241,.5)">${ICON.globe.replace('<svg', '<svg style="width:1em;height:1em"')}${URL_SITE}</div>`, { x: ux, y: H * (V ? 0.68 : 0.47) })
-      .k(0.5, 0.85, { o: 0, y: H * (V ? 0.72 : 0.52) }, { o: 1, y: H * (V ? 0.68 : 0.47) }, 'expo').k(d - 0.2, d, {}, { o: 0 });
-    mk(tx(C.platLine, V ? 3.7 : 2.8, 'muted', 'font-weight:600'), { x: ux, y: H * (V ? 0.76 : 0.6) }).k(0.9, 1.2, { o: 0 }, { o: 1 }).k(d - 0.2, d, {}, { o: 0 });
-    mk(`<div class="chip" style="font-size:${(V ? 3.8 : 2.8) * U}px"><i></i>${C.inst}</div>`, { x: ux, y: H * (V ? 0.81 : 0.72) }).k(1.2, 1.5, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
+    mk(`<div class="chip" style="font-size:${(V ? 4.1 : 3) * U}px;direction:ltr;border-color:rgba(99,102,241,.8);box-shadow:0 0 40px rgba(99,102,241,.5)">${ICON.globe.replace('<svg', '<svg style="width:1em;height:1em"')}${URL_SITE}</div>`, { x: ux, y: H * (V ? 0.64 : 0.47) })
+      .k(0.5, 0.85, { o: 0, y: H * (V ? 0.68 : 0.52) }, { o: 1, y: H * (V ? 0.64 : 0.47) }, 'expo').k(d - 0.2, d, {}, { o: 0 });
+    mk(tx(C.platLine, V ? 3.7 : 2.8, 'muted', 'font-weight:600'), { x: ux, y: H * (V ? 0.705 : 0.6) }).k(0.9, 1.2, { o: 0 }, { o: 1 }).k(d - 0.2, d, {}, { o: 0 });
+    mk(`<div class="chip" style="font-size:${(V ? 3.8 : 2.8) * U}px"><i></i>${C.inst}</div>`, { x: ux, y: H * (V ? 0.76 : 0.72) }).k(1.2, 1.5, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back').k(d - 0.2, d, {}, { o: 0 });
     streak(0, 1); cue(0.2, 'pop'); cue(0.5, 'whoosh'); cue(1.2, 'pop');
   };
 
@@ -398,10 +398,10 @@
     mk(tx(C.endB, V ? 3.7 : 2.8, 'muted', 'font-weight:600'), { x: cx, y: H * (V ? 0.55 : 0.58) }).k(0.5, 0.8, { o: 0 }, { o: 1 });
     const hs = (V ? 4.4 : 3.2) * U;
     const handle = (ic, label) => `<div class="chip" style="font-size:${hs}px;direction:ltr">${ic.replace('<svg', '<svg style="width:1.1em;height:1.1em"')}${label}</div>`;
-    const hy = H * (V ? 0.67 : 0.7);
+    const hy = H * (V ? 0.63 : 0.7);
     mk(handle(ICON.ig, '@pouyamworld'), { x: cx, y: hy }).k(0.7, 1.0, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back');
     mk(handle(ICON.yt, '@pouyamworld'), { x: cx, y: hy + (V ? 8 : 7) * U }).k(0.85, 1.15, { o: 0, s: 0.6 }, { o: 1, s: 1 }, 'back');
-    mk(tx('pouyam.com', V ? 3.8 : 2.8, 'gold', 'font-weight:700;letter-spacing:.08em;direction:ltr'), { x: cx, y: H * (V ? 0.81 : 0.88) }).k(1.0, 1.3, { o: 0 }, { o: 1 });
+    mk(tx('pouyam.com', V ? 3.8 : 2.8, 'gold', 'font-weight:700;letter-spacing:.08em;direction:ltr'), { x: cx, y: H * (V ? 0.765 : 0.88) }).k(1.0, 1.3, { o: 0 }, { o: 1 });
     if (!V) {
       // YouTube end-screen areas (the video and subscribe elements are placed over these in YouTube Studio).
       const ex = W * (FA ? 0.25 : 0.75);
