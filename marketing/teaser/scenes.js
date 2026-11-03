@@ -470,7 +470,10 @@
     youtube: [['hook', 4], ['matchday', 4], ['problems', 4], ['reveal', 4], ['how', 8], ['features', 16], ['speed', 4], ['numbers', 4], ['security', 4], ['platforms', 4], ['ai', 8], ['score', 4], ['collective', 8], ['cta', 6], ['end', 8]],
   };
   let t = 0;
-  for (const [name, dur] of TIMELINES[FORMAT]) {
+  // Scene lengths fitted to the voice (fit.py), when there is one.
+  const fitted = window.TIMING && window.TIMING.durations;
+  for (const [i, [name, base]] of TIMELINES[FORMAT].entries()) {
+    const dur = fitted ? fitted[i] : base;
     T0 = t; D = dur;
     SCENES.push({ name, t0: t, d: dur });
     S[name](dur);

@@ -25,6 +25,9 @@ function matrix(text) {
 }
 writeFileSync(join(DIR, 'qr.js'), `window.QR = ${JSON.stringify({ site: matrix('https://pouyamsmartcity.github.io/turbodrop/'), lan: matrix('http://192.168.1.20:47474/#k=demo') })};\n`);
 
+import { existsSync, readFileSync } from 'node:fs';
+const timingFile = join(DIR, 'out', `timing-${format}-${lang}.json`);
+writeFileSync(join(DIR, 'timing.js'), `window.TIMING = ${existsSync(timingFile) ? readFileSync(timingFile, 'utf8') : 'null'};\n`);
 const W = format === 'reel' ? 1080 : 1920;
 const H = format === 'reel' ? 1920 : 1080;
 const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });

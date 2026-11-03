@@ -39,6 +39,11 @@ if not use_ready and not voice:
     voice = pick['voice_id']
     print('voice:', pick['name'])
 
+timing_file = os.path.join(DIR, 'out', f'timing-{fmt}-{lang}.json')
+if os.path.exists(timing_file):  # scenes fitted to the voice: each line starts with its scene
+    ds = json.load(open(timing_file))['durations']
+    starts = [sum(ds[:i]) for i in range(len(ds))]
+    LINES[(fmt, lang)] = [(starts[i], text) for i, (_, text) in enumerate(LINES[(fmt, lang)])]
 parts = []
 for i, (t, text) in enumerate(LINES[(fmt, lang)]):
     if use_ready:
@@ -60,7 +65,7 @@ def duration(p):
 
 # One track with every line at its scene time. A line longer than its slot is sped up a little (at most 1.3x);
 # if it still does not fit, the next line waits for it, so lines never overlap.
-TOTAL = 30 if fmt == 'reel' else 90
+TOTAL = sum(json.load(open(timing_file))['durations']) if os.path.exists(timing_file) else (30 if fmt == 'reel' else 90)
 inputs, chains, cursor, timing = [], [], 0.0, []
 for i, (t, p) in enumerate(parts):
     slot_end = parts[i + 1][0] if i + 1 < len(parts) else TOTAL - 0.3

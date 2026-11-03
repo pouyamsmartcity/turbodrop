@@ -250,18 +250,30 @@ end_t = info['total']
 filtered_mask = np.zeros(N)
 kick_times = []
 
-for s in scenes:
-    mode = MODE[s['name']]
-    for b in range(int(round(s['d'] / BAR))):
-        t0 = s['t0'] + b * BAR
-        bar_index = int(round(t0 / BAR))
+# One global bar grid (scenes may end on a half bar when they are fitted to a voice; cuts stay on the beat).
+def scene_at(t):
+    cur = scenes[0]
+    for sc in scenes:
+        if sc['t0'] <= t + 1e-6:
+            cur = sc
+    return cur
+
+
+for bar_index in range(int(np.ceil(end_t / BAR - 1e-6))):
+        t0 = bar_index * BAR
+        s = scene_at(t0)
+        mode = MODE[s['name']]
+        scene_end = s['t0'] + s['d']
+        nxt = scene_at(t0 + BAR - 0.01)
         root, chord = CHORDS[bar_index % 4]
-        last_bar = b == int(round(s['d'] / BAR)) - 1
+        last_bar = t0 + BAR >= scene_end - 1e-6 or nxt is not s
+        if nxt is not s:  # the scene ends inside this bar: its build-up belongs to the next one's entrance
+            scene_end = nxt['t0']
         if mode == 'intro':
             add(music, pad([note(n) for n in chord], BAR), t0, 0.5)
             add(music, bass_note(note(root - 12), BAR), t0, 0.5)
             if last_bar:
-                add(sfx, riser(BAR), t0, 0.7)
+                add(sfx, riser(BAR), scene_end - BAR, 0.7)
             continue
         if mode == 'outro':
             add(music, supersaw([note(n) for n in chord + [chord[0] + 12]], 0.4, release=2.5, cutoff=5000), t0, 0.9)
@@ -283,8 +295,8 @@ for s in scenes:
                 add(music, HO if (e == 1 and mode in ('drop', 'full')) else HC, ht, 0.35 if e else 0.25, 0.35 if e else -0.3)
         if mode == 'build' and last_bar:
             for i in range(16):  # snare roll into the next scene
-                add(music, SN, t0 + i * BEAT / 4, 0.15 + 0.5 * i / 16, 0.0)
-            add(sfx, riser(BAR), t0, 0.8)
+                add(music, SN, scene_end - BAR + i * BEAT / 4, 0.15 + 0.5 * i / 16, 0.0)
+            add(sfx, riser(BAR), scene_end - BAR, 0.8)
         # Bass: 8th notes, root and octave
         if mode != 'build':
             for e in range(8):
@@ -301,7 +313,7 @@ for s in scenes:
         if mode == 'filtered':
             filtered_mask[int(t0 * SR): int((t0 + BAR) * SR)] = 1
             if last_bar:
-                add(sfx, riser(BAR), t0, 0.6)
+                add(sfx, riser(BAR), scene_end - BAR, 0.6)
 
 # The voice-friendly "filtered" section: a smooth low-pass blend.
 fm = np.convolve(filtered_mask, np.ones(4800) / 4800, mode='same')
