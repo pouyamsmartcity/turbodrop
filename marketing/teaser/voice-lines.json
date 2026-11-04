@@ -1,0 +1,172 @@
+{
+ "version": "calm-1",
+ "reel-fa": [
+  {
+   "text": "پویام تقدیم می‌کند.",
+   "sub_en": "Pouyam presents."
+  },
+  {
+   "text": "فرستادن فایل از آیفون به ویندوز، نباید سخت باشد.",
+   "sub_en": "Sending a file from an iPhone to Windows shouldn’t be hard."
+  },
+  {
+   "text": "توربودراپ؛ مثل ایردراپ، برای همهٔ دستگاه‌ها.",
+   "sub_en": "Turbodrop: like AirDrop, for every device."
+  },
+  {
+   "text": "اسکن کنید و بفرستید؛ بدون نصب برنامه روی گوشی.",
+   "sub_en": "Scan and send, with nothing to install on the phone."
+  },
+  {
+   "text": "اگر اتصال قطع شود، از همان‌جا ادامه می‌دهد.",
+   "sub_en": "If the connection drops, it continues from where it stopped."
+  },
+  {
+   "text": "رمزنگاری سرتاسری، بدون فضای ابری.",
+   "sub_en": "End‑to‑end encrypted, with no cloud."
+  },
+  {
+   "text": "همهٔ دستگاه‌ها، به دوازده زبان.",
+   "sub_en": "Every device, in twelve languages."
+  },
+  {
+   "text": "برای برنامه‌نویس‌ها و هوش مصنوعی هم.",
+   "sub_en": "For developers and AI, too."
+  },
+  {
+   "text": "رایگان و متن‌باز.",
+   "sub_en": "Free and open source."
+  },
+  {
+   "text": "یک پروژهٔ متن‌باز از پویام.",
+   "sub_en": "An open-source project by Pouyam."
+  }
+ ],
+ "reel-en": [
+  {
+   "text": "Pouyam presents."
+  },
+  {
+   "text": "Sending a file from an iPhone to Windows shouldn’t be hard."
+  },
+  {
+   "text": "Turbodrop: like AirDrop, for every device."
+  },
+  {
+   "text": "Scan and send, with nothing to install on the phone."
+  },
+  {
+   "text": "If the connection drops, it continues from where it stopped."
+  },
+  {
+   "text": "End‑to‑end encrypted, with no cloud."
+  },
+  {
+   "text": "Every device, in twelve languages."
+  },
+  {
+   "text": "For developers and AI, too."
+  },
+  {
+   "text": "Free and open source."
+  },
+  {
+   "text": "An open-source project by Pouyam."
+  }
+ ],
+ "youtube-fa": [
+  {
+   "text": "پویام تقدیم می‌کند.",
+   "sub_en": "Pouyam presents."
+  },
+  {
+   "text": "هر روز فایل‌هایمان را بین آیفون، اندروید، ویندوز و مک جابه‌جا می‌کنیم. این کار نباید سخت باشد.",
+   "sub_en": "Every day we move files between iPhone, Android, Windows and Mac. It shouldn’t be hard."
+  },
+  {
+   "text": "با توربودراپ آشنا شوید؛ مثل ایردراپ، برای همهٔ دستگاه‌ها.",
+   "sub_en": "Meet Turbodrop: like AirDrop, for every device."
+  },
+  {
+   "text": "برنامه را روی کامپیوتر باز کنید و کد را با گوشی اسکن کنید. گوشی در همان مرورگر، هم می‌فرستد و هم دریافت می‌کند؛ بدون نصب برنامه.",
+   "sub_en": "Open the app on your computer and scan the code with your phone. The phone sends and receives right in its browser, with no app to install."
+  },
+  {
+   "text": "اتصال کامپیوترها با یک کد چهار ایموجی، پیدا کردن خودکار دستگاه‌های نزدیک، عکس‌هایی با پیش‌نمایش، و پوشه‌هایی که ساختارشان حفظ می‌شود.",
+   "sub_en": "Computers pair with a four‑emoji code, nearby devices are found automatically, photos arrive with previews, and folders keep their structure."
+  },
+  {
+   "text": "اگر اتصال قطع شود، از اول شروع نمی‌کند؛ از همان‌جا ادامه می‌دهد.",
+   "sub_en": "If the connection drops, it doesn’t start over; it continues from where it stopped."
+  },
+  {
+   "text": "نصب‌کنندهٔ ویندوز حدود چهار مگابایت است، و محدودیت سرعت، شبکهٔ خود شماست.",
+   "sub_en": "The Windows installer is about four megabytes, and the speed limit is your own network."
+  },
+  {
+   "text": "رمزنگاری سرتاسری؛ بدون فضای ابری، بدون حساب کاربری، حتی بدون اینترنت.",
+   "sub_en": "End‑to‑end encrypted: no cloud, no account, not even an internet connection."
+  },
+  {
+   "text": "ویندوز، مک، لینوکس، آیفون و اندروید؛ به دوازده زبان.",
+   "sub_en": "Windows, Mac, Linux, iPhone and Android, in twelve languages."
+  },
+  {
+   "text": "برای برنامه‌نویس‌ها خط فرمان دارد؛ پس دستیارهای هوش مصنوعی مثل کلاد کد هم می‌توانند با آن فایل بفرستند.",
+   "sub_en": "For developers it has a command line, so AI assistants like Claude Code can send files with it too."
+  },
+  {
+   "text": "توربودراپ بخشی از متن‌باز پویام است: ابزارهای رایگان برای برنامه‌نویس‌ها و همهٔ دنیا.",
+   "sub_en": "Turbodrop is part of Pouyam Open Source: free tools for developers and the whole world."
+  },
+  {
+   "text": "رایگان و متن‌باز؛ لینک دانلود در توضیحات است.",
+   "sub_en": "Free and open source. The download link is in the description."
+  },
+  {
+   "text": "پویام‌ورلد را در اینستاگرام و یوتیوب دنبال کنید.",
+   "sub_en": "Follow pouyamworld on Instagram and YouTube."
+  }
+ ],
+ "youtube-en": [
+  {
+   "text": "Pouyam presents."
+  },
+  {
+   "text": "Every day we move files between iPhone, Android, Windows and Mac. It shouldn’t be hard."
+  },
+  {
+   "text": "Meet Turbodrop: like AirDrop, for every device."
+  },
+  {
+   "text": "Open the app on your computer and scan the code with your phone. The phone sends and receives right in its browser, with no app to install."
+  },
+  {
+   "text": "Computers pair with a four‑emoji code, nearby devices are found automatically, photos arrive with previews, and folders keep their structure."
+  },
+  {
+   "text": "If the connection drops, it doesn’t start over; it continues from where it stopped."
+  },
+  {
+   "text": "The Windows installer is about four megabytes, and the speed limit is your own network."
+  },
+  {
+   "text": "End‑to‑end encrypted: no cloud, no account, not even an internet connection."
+  },
+  {
+   "text": "Windows, Mac, Linux, iPhone and Android, in twelve languages."
+  },
+  {
+   "text": "For developers it has a command line, so AI assistants like Claude Code can send files with it too."
+  },
+  {
+   "text": "Turbodrop is part of Pouyam Open Source: free tools for developers and the whole world."
+  },
+  {
+   "text": "Free and open source. The download link is in the description."
+  },
+  {
+   "text": "Follow pouyamworld on Instagram and YouTube."
+  }
+ ]
+}
