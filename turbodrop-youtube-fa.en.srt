@@ -1,0 +1,127 @@
+1
+00:00:00,080 --> 00:00:06,060
+iPhone to Windows… Android to Mac… still using a cable?
+
+2
+00:00:06,080 --> 00:00:10,849
+Tonight is matchday: your phone, against your computer.
+
+3
+00:00:11,080 --> 00:00:17,051
+The old way? Cables. The cloud. Yet another app to install.
+
+4
+00:00:17,080 --> 00:00:22,060
+Meet Turbodrop. Like AirDrop, for every device.
+
+5
+00:00:22,080 --> 00:00:26,427
+Open Turbodrop on the computer, scan the QR code with your
+
+6
+00:00:26,447 --> 00:00:30,643
+phone's camera… and send. Photos, videos, folders, text.
+
+7
+00:00:30,663 --> 00:00:34,060
+Nothing needs to be installed on the phone.
+
+8
+00:00:34,080 --> 00:00:38,308
+Wi‑Fi dropped halfway? It continues from the last chunk.
+
+9
+00:00:38,328 --> 00:00:41,191
+Computers pair with a four‑emoji code.
+
+10
+00:00:41,211 --> 00:00:43,542
+Nearby devices find each other.
+
+11
+00:00:43,562 --> 00:00:48,170
+Photos arrive with previews, and you save them all at once as
+
+12
+00:00:48,190 --> 00:00:48,625
+a ZIP.
+
+13
+00:00:48,645 --> 00:00:53,253
+Folders keep their structure, and duplicate files aren't sent
+
+14
+00:00:53,273 --> 00:00:58,060
+again. It feels like part of Windows 11, in twelve languages.
+
+15
+00:00:58,080 --> 00:01:01,181
+At full Wi‑Fi speed. Connection lost?
+
+16
+00:01:01,201 --> 00:01:04,060
+It continues exactly from there.
+
+17
+00:01:04,080 --> 00:01:06,020
+A four‑megabyte installer.
+
+18
+00:01:06,040 --> 00:01:10,242
+Its engine moves a gigabyte in seven and a half seconds;
+
+19
+00:01:10,262 --> 00:01:13,060
+the only limit is your own network.
+
+20
+00:01:13,080 --> 00:01:20,060
+End‑to‑end encryption. No cloud, no account, no internet.
+
+21
+00:01:20,080 --> 00:01:24,849
+Windows, iPhone, Android, Mac and Linux.
+
+22
+00:01:25,080 --> 00:01:29,503
+For developers, there's a real command line with JSON output,
+
+23
+00:01:29,523 --> 00:01:33,582
+so your AI assistant, like Claude Code, Cursor, Codex or
+
+24
+00:01:33,602 --> 00:01:38,060
+Gemini CLI, can send a file to your phone with one command.
+
+25
+00:01:38,080 --> 00:01:42,060
+Full time! Turbodrop four, cables zero!
+
+26
+00:01:42,080 --> 00:01:45,105
+Turbodrop is made by Pouyam Open Source:
+
+27
+00:01:45,125 --> 00:01:49,520
+free tools we build for ourselves and give to everyone, to
+
+28
+00:01:49,540 --> 00:01:52,060
+developers and the whole world.
+
+29
+00:01:52,080 --> 00:01:55,258
+It's free, it's open source. Get it from its website;
+
+30
+00:01:55,278 --> 00:01:57,398
+the link is in the description.
+
+31
+00:01:58,080 --> 00:02:03,217
+Follow pouyamworld on Instagram and YouTube. If it helped you…
+
+32
+00:02:03,237 --> 00:02:05,566
+give it a star on GitHub.
