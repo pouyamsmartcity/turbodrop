@@ -170,9 +170,9 @@
     // Particles (light dust), faster in "warp" moments.
     g.globalCompositeOperation = 'lighter';
     for (const p of parts) {
-      const y = (p.y - t * 40 * p.z * (1 + m.warp * 12)) % H;
+      const y = (p.y - t * 16 * p.z * (1 + m.warp * 12)) % H;
       const yy = y < 0 ? y + H : y;
-      const a = (0.25 + 0.35 * Math.sin(t * 2 + p.ph)) * p.z;
+      const a = (0.18 + 0.22 * Math.sin(t * 0.8 + p.ph)) * p.z;
       g.fillStyle = p.c < 0.33 ? `rgba(34,211,238,${a})` : p.c < 0.66 ? `rgba(165,180,252,${a})` : `rgba(240,171,252,${a})`;
       if (m.warp > 0.05) g.fillRect(p.x, yy, 2 * p.z, 2 + m.warp * 60 * p.z);
       else {

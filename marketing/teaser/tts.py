@@ -3,7 +3,8 @@
 ELEVENLABS_API_KEY=... python3 tts.py <reel|youtube> <en|fa> [voice_id]
 Without a voice id the first voice whose name or labels mention "sports", "announcer", "trailer" or "narrat" is used.
 Model: $ELEVENLABS_MODEL, default eleven_v4 (Persian and audio tags such as [excited]).
-If voice/<format>-<lang>-NN.mp3 files exist for every line, they are used and no API call is made.
+If voice/<version>/<format>-<lang>-NN.mp3 files exist for every line (version from voice-lines.json), they are used
+and no API call is made.
 """
 import json
 import os
@@ -17,8 +18,11 @@ voice = sys.argv[3] if len(sys.argv) > 3 else os.environ.get('ELEVENLABS_VOICE_I
 MODEL = os.environ.get('ELEVENLABS_MODEL', 'eleven_v4')
 DIR = os.path.dirname(os.path.abspath(__file__))
 
-LINES = {tuple(k.split('-')): [(x['t'], x['text']) for x in v] for k, v in json.load(open(os.path.join(DIR, 'voice-lines.json'), encoding='utf-8')).items()}
-SUBS = {tuple(k.split('-')): [x.get('sub_en') for x in v] for k, v in json.load(open(os.path.join(DIR, 'voice-lines.json'), encoding='utf-8')).items()}
+_doc = json.load(open(os.path.join(DIR, 'voice-lines.json'), encoding='utf-8'))
+VERSION = _doc.get('version', 'v1')
+LINES = {tuple(k.split('-')): [(None, x['text']) for x in v] for k, v in _doc.items() if k != 'version'}
+SUBS = {tuple(k.split('-')): [x.get('sub_en') for x in v] for k, v in _doc.items() if k != 'version'}
+VOICE_DIR = os.path.join(DIR, 'voice', VERSION)  # one folder per script version, so old takes never mix in
 
 
 def api(path, body=None):
@@ -28,7 +32,7 @@ def api(path, body=None):
         return r.read()
 
 
-ready = [os.path.join(DIR, 'voice', f'{fmt}-{lang}-{i:02d}.mp3') for i in range(len(LINES[(fmt, lang)]))]
+ready = [os.path.join(VOICE_DIR, f'{fmt}-{lang}-{i:02d}.mp3') for i in range(len(LINES[(fmt, lang)]))]
 use_ready = all(os.path.exists(p) for p in ready)
 if not use_ready and not KEY:
     sys.exit('ELEVENLABS_API_KEY is not set and voice/ has no ready-made lines')
@@ -40,19 +44,22 @@ if not use_ready and not voice:
     print('voice:', pick['name'])
 
 timing_file = os.path.join(DIR, 'out', f'timing-{fmt}-{lang}.json')
-if os.path.exists(timing_file):  # scenes fitted to the voice: each line starts with its scene
-    ds = json.load(open(timing_file))['durations']
-    starts = [sum(ds[:i]) for i in range(len(ds))]
-    LINES[(fmt, lang)] = [(starts[i], text) for i, (_, text) in enumerate(LINES[(fmt, lang)])]
+# Scenes fitted to the voice (fit.py; run here if it has not been): each line starts with its scene.
+subprocess.run([sys.executable, os.path.join(DIR, 'fit.py'), fmt, lang], check=True)
+ds = json.load(open(timing_file))['durations']
+starts = [sum(ds[:i]) for i in range(len(ds))]
+LINES[(fmt, lang)] = [(starts[i], text) for i, (_, text) in enumerate(LINES[(fmt, lang)])]
 parts = []
 for i, (t, text) in enumerate(LINES[(fmt, lang)]):
     if use_ready:
         parts.append((t, ready[i]))
         continue
-    path = os.path.join(DIR, 'out', f'vo-{fmt}-{lang}-{i:02d}.mp3')
+    os.makedirs(VOICE_DIR, exist_ok=True)
+    path = os.path.join(VOICE_DIR, f'{fmt}-{lang}-{i:02d}.mp3')
     audio = api(f'/v1/text-to-speech/{voice}?output_format=mp3_44100_192', {
         'text': text, 'model_id': MODEL, 'language_code': lang,
-        'voice_settings': {'stability': 0.5, 'similarity_boost': 0.8, 'style': 0.6},
+        # A calm, warm narration: steady delivery, little exaggeration.
+        'voice_settings': {'stability': 0.7, 'similarity_boost': 0.8, 'style': 0.15, 'use_speaker_boost': True},
     })
     open(path, 'wb').write(audio)
     parts.append((t, path))
@@ -63,16 +70,16 @@ def duration(p):
     return float(out.stdout.strip())
 
 
-# One track with every line at its scene time. A line longer than its slot is sped up a little (at most 1.3x);
+# One track with every line at its scene time. A line longer than its slot is sped up a little (at most 1.12x);
 # if it still does not fit, the next line waits for it, so lines never overlap.
-TOTAL = sum(json.load(open(timing_file))['durations']) if os.path.exists(timing_file) else (30 if fmt == 'reel' else 90)
+TOTAL = sum(ds)
 inputs, chains, cursor, timing = [], [], 0.0, []
 for i, (t, p) in enumerate(parts):
     slot_end = parts[i + 1][0] if i + 1 < len(parts) else TOTAL - 0.3
     start = max(t + 0.08, cursor)
     d = duration(p)
     room = max(0.5, slot_end - start - 0.1)
-    tempo = min(1.3, d / room) if d > room else 1.0
+    tempo = min(1.12, d / room) if d > room else 1.0
     cursor = start + d / tempo + 0.05
     if cursor > TOTAL:
         print(f'warning: line {i} ends at {cursor:.1f}s, after the video ({TOTAL}s)')
