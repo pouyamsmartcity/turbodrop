@@ -27,12 +27,14 @@ writeFileSync(join(DIR, 'qr.js'), `window.QR = ${JSON.stringify({ site: matrix('
 
 import { existsSync, readFileSync } from 'node:fs';
 const timingFile = join(DIR, 'out', `timing-${format}-${lang}.json`);
-writeFileSync(join(DIR, 'timing.js'), `window.TIMING = ${existsSync(timingFile) ? readFileSync(timingFile, 'utf8') : 'null'};\n`);
+// Given to this page only (two renders may run at once, so no shared file).
+const timing = existsSync(timingFile) ? JSON.parse(readFileSync(timingFile, 'utf8')) : null;
 const W = format === 'reel' ? 1080 : 1920;
 const H = format === 'reel' ? 1920 : 1080;
 const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] });
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 page.on('pageerror', (e) => console.error('page error:', e.message));
+await page.addInitScript((t) => { window.TIMING = t; }, timing);
 await page.goto(`file://${join(DIR, 'scene.html')}?format=${format}&lang=${lang}`);
 await page.evaluate(async () => {
   await document.fonts.ready;
